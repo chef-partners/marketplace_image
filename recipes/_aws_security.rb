@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: default
+# Recipe:: _aws_security
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -17,5 +17,20 @@
 # limitations under the License.
 #
 
-include_recipe 'marketplace_image::_bootstrap'
-include_recipe "marketplace_image::_#{node['marketplace_image']['marketplace']}"
+control_group 'amazon' do
+  control 'default user' do
+    it 'is a user' do
+      expect(user('ec2-user')).to exist
+      expect(user('ec2-user')).to have_home_directory('/home/ec2-user')
+      expect(user('ec2-user')).to have_login_shell('/bin/bash')
+    end
+
+    it 'has sudo access' do
+      expect(file('/etc/sudoers')).to contains('ec2-user ALL=(ALL) NOPASSWD: ALL')
+    end
+
+    it 'does not have a password' do
+      expect(command('passwd -S ec2-user').stdout).to match(/Password locked/)
+    end
+  end
+end

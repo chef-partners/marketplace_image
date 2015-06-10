@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: default
+# Recipe:: _aws
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -17,5 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe 'marketplace_image::_bootstrap'
-include_recipe "marketplace_image::_#{node['marketplace_image']['marketplace']}"
+# TODO ADD ec2 hint for chef
+
+include_recipe 'marketplace_image::_aws_security'

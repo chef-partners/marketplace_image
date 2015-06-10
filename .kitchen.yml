@@ -1,15 +1,38 @@
 ---
-driver:
-  name: vagrant
-
 provisioner:
   name: chef_zero
+  require_chef_omnibus: true
+  client_rb:
+    audit_mode: :enabled
 
 platforms:
-  - name: centos-6.4
-  - name: centos-7.1
+  - name: aws-centos-6.6
+    driver_plugin: ec2
+    driver_config:
+      image_id: ami-af47adc4
+      transport:
+        username: ec2-user
+        ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
+      instance_type: t2.micro
+      associate_public_ip: true
+      aws_ssh_key_id: marketplace_builder
+      security_groups: marketplace_builder
+      region: us-east-1
+    transport:
+      username: ec2-user
+
+  - name: vagrant-centos-6.6
+    driver_plugin: vagrant
+    driver_config:
+      box: opscode-centos-6.6
+      network:
+        - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
+        - ["forwarded_port", {guest: 443, host: 8443, auto_correct: true}]
+      customize:
+        cpus: 2
+        memory: 4096
 
 suites:
-  - name: vagrant-marketplace
-    run_list:
+  - name: marketplace_image
+    run_list: test::default
     attributes:
