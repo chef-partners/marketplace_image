@@ -4,7 +4,6 @@ default['marketplace_image']['opscode_reporting_version'] = nil
 default['marketplace_image']['opscode_manage_version'] = nil
 default['marketplace_image']['license_count'] = 25
 default['marketplace_image']['support_email'] = 'aws@chef.io'
-default['marketplace_image']['wipe_ssh_keys'] = true
 
 default['openssh']['server'].tap do |server|
   server['protocol'] = 2

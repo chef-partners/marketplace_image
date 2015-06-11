@@ -76,4 +76,10 @@ package 'cloud-init' do
   action :install
 end
 
-include_recipe 'marketplace_image::_security'
+directory '/etc/chef/ohai/hints' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  recursive true
+  action :create
+end

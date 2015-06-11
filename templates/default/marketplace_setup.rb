@@ -1,8 +1,8 @@
 require 'optparse'
-
 require 'ostruct'
 require 'highline/import'
 require 'chef/json_compat'
+require 'ohai/system'
 
 add_command_under_category 'marketplace-setup', 'marketplace', 'Set up the Chef Server Marketplace Appliance', 2 do
   options = OpenStruct.new
@@ -66,6 +66,7 @@ class MarketplaceSetup
     run_validation_hook
     verify_options
     agree_to_eula
+    update_fqdn
     reconfigure_chef_server
     create_default_user
     create_default_org
@@ -115,6 +116,27 @@ class MarketplaceSetup
     end
   end
 
+  def ohai
+    @ohai ||= Ohai::System.new.all_plugins(%w(cloud_v2)).first
+  end
+
+  def update_fqdn
+    return unless ohai.data['cloud_v2']
+
+    api_fqdn =
+      if ohai.on_gce?
+        ohai.data['cloud_v2']['public_ipv4']
+      elsif ohai.on_azure?
+        "#{ohai.data['public_hostname']}.cloudapp.net"
+      elsif ohai.on_ec2?
+        ohai.data['cloud_v2']['public_hostname']
+      end
+
+    %w(/etc/opscode/chef-server.rb /etc/opscode-manage/manage.rb).each do |config|
+      ::File.open(config, 'a') { |f| f.puts "api_fqdn '#{api_fqdn}'" }
+    end
+  end
+
   def reconfigure_chef_server
     puts 'Please wait while we set up the Chef Server. This may take a few minutes to complete'
     run_command('chef-server-ctl reconfigure')
@@ -160,9 +182,11 @@ class MarketplaceSetup
       "\n\nYou're all set!\n",
       "Next you'll want to log into the Chef Web Management console:",
       "https://#{fqdn}/login\n",
+      "Make sure you use your new username '#{options.username}' to login\n",
       "After you've logged in you'll want to download the Starter Kit:",
       "https://#{fqdn}/organizations/#{options.organization}/getting_started\n\n"
     ].join("\n")
+
     puts(msg)
   end
 end

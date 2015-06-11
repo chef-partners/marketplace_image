@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: _aws
+# Recipe:: _security
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -18,73 +18,40 @@
 #
 
 include_recipe 'openssh::default'
+include_recipe 'marketplace_image::_security_controls'
 
-control_group 'marketplace image' do
-  let(:user_dirs) do
-    Etc::Passwd.each_with_object({}) do |user, memo|
-      next if %w(vagrant halt sync shutdown).include?(user.name) ||
-              user.shell =~ %r{(/sbin/nologin|/bin/false)}
-      memo[user.name] = user.dir
+MarketplaceHelpers.user_directories.each do |_user, dir|
+  %w(id_rsa id_rsa.pub authorized_keys).each do |ssh_file|
+    file ::File.join(dir, '.ssh', ssh_file) do
+      action :delete
     end
   end
 
-  control 'ssh access' do
-    it 'does not have any default keys' do
-      user_dirs.each do |_, dir|
-        expect(file("#{dir}/.ssh/id_rsa")).to_not be_file
-        expect(file("#{dir}/.ssh/id_rsa.pub")).to_not be_file
-        expect(file("#{dir}/.ssh/authorized_keys")).to_not be_file
-      end
-
-      %w(key dsa_key rsa_key).each do |key|
-        expect(file("/etc/ssh/ssh_host_#{key}")).to_not be_file
-        expect(file("/etc/ssh/ssh_host_#{key}.pub")).to_not be_file
-      end
-    end if node['marketplace_image']['wipe_ssh_keys']
-
-    it 'is listening on port 22' do
-      expect(port(22)).to be_listening
-    end
-
-    it 'does not allow root login' do
-      expect(file('/etc/ssh/sshd_config')).to contain('PermitRootLogin no')
-    end
-
-    it 'disables DNS checks' do
-      expect(file('/etc/ssh/sshd_config')).to contain('UseDNS no')
-    end
-
-    it 'has cloud-init enabled' do
-      expect(package('cloud-init')).to be_installed
-    end
+  file ::File.join(dir, '.bash_history') do
+    action :delete
   end
+end
 
-  control 'root user' do
-    it 'does not have a password' do
-      expect(command('passwd -S root').stdout).to match(/Password locked/)
-    end
+MarketplaceHelpers.system_ssh_keys.each do |key|
+  file key do
+    action :delete
   end
+end
 
-  control 'chef config' do
-    it 'does not have chef config' do
-      expect(file('/etc/chef')).to_not be_directory
-      expect(file('/var/chef')).to_not be_directory
-
-      user_dirs.each do |_, dir|
-        expect(file("#{dir}/.chef")).to_not be_directory
-      end
-    end
+MarketplaceHelpers.sudoers.each do |sudo_user|
+  file sudo_user do
+    action :delete
   end
+end
 
-  control 'history' do
-    it 'does not common logs' do
-      expect(file('/var/log/chef')).to_not be_file
-    end
+user 'root' do
+  action :lock
+end
 
-    it 'does not have user shell history' do
-      user_dirs.each do |_, dir|
-        expect(file("#{dir}/.bash_history")).to_not be_file
-      end
-    end
+# delete /tmp last
+%w(/tmp /var/log /var/chef /etc/chef).each do |dir|
+  directory dir do
+    action :delete
+    recursive true
   end
 end

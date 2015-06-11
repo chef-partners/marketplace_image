@@ -9,11 +9,11 @@ platforms:
   - name: aws-centos-6.6
     driver_plugin: ec2
     driver_config:
-      image_id: ami-af47adc4
+      image_id: ami-655fab0e
       transport:
         username: ec2-user
         ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
-      instance_type: t2.micro
+      instance_type: t2.medium
       associate_public_ip: true
       aws_ssh_key_id: marketplace_builder
       security_groups: marketplace_builder

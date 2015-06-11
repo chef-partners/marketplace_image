@@ -17,6 +17,19 @@
 # limitations under the License.
 #
 
-# TODO ADD ec2 hint for chef
+file '/etc/chef/ohai/hints/ec2.json' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create_if_missing
+end
+
+user 'ec2-user' do
+  home '/home/ec2-user'
+  shell '/bin/bash'
+  action [:create, :lock]
+end
+
+# TODO: Add ec2 verification hook
 
 include_recipe 'marketplace_image::_aws_security'

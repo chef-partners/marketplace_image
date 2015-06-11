@@ -25,10 +25,6 @@ control_group 'amazon' do
       expect(user('ec2-user')).to have_login_shell('/bin/bash')
     end
 
-    it 'has sudo access' do
-      expect(file('/etc/sudoers')).to contains('ec2-user ALL=(ALL) NOPASSWD: ALL')
-    end
-
     it 'does not have a password' do
       expect(command('passwd -S ec2-user').stdout).to match(/Password locked/)
     end
