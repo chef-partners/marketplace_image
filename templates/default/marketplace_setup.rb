@@ -132,8 +132,8 @@ class MarketplaceSetup
         ohai.data['cloud_v2']['public_hostname']
       end
 
-    %w(/etc/opscode/chef-server.rb /etc/opscode-manage/manage.rb).each do |config|
-      ::File.open(config, 'a') { |f| f.puts "api_fqdn '#{api_fqdn}'" }
+    ::File.open('/etc/opscode/chef-server.rb', 'a') do |f|
+      f.puts "api_fqdn '#{api_fqdn}'"
     end
   end
 
