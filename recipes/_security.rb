@@ -48,13 +48,6 @@ user 'root' do
   action :lock
 end
 
-%w(/var/chef /etc/chef).each do |dir|
-  directory dir do
-    action :delete
-    recursive true
-  end
-end
-
 directory '/var/log' do
   owner 'root'
   group 'root'

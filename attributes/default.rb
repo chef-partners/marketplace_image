@@ -18,6 +18,7 @@ default['openssh']['server'].tap do |server|
   server['g_s_s_a_p_i_cleanup_credentials'] = 'yes'
   server['use_p_a_m'] = 'yes'
   server['use_d_n_s'] = 'no'
+  server['Subsystem'] = 'sftp    /usr/libexec/openssh/sftp-server'
 end
 
 %w(base extras plus updates).each do |repo|

@@ -9,7 +9,7 @@ platforms:
   - name: aws-centos-6.6
     driver_plugin: ec2
     driver_config:
-      image_id: ami-655fab0e
+      image_id: ami-0b946360
       transport:
         username: ec2-user
         ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>

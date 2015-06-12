@@ -66,9 +66,6 @@ control_group 'basic security' do
 
   control 'chef config' do
     it 'does not have chef config' do
-      expect(file('/etc/chef')).to_not be_directory
-      expect(file('/var/chef')).to_not be_directory
-
       user_directories.each do |_user, dir|
         expect(file("#{dir}/.chef")).to_not be_directory
       end
