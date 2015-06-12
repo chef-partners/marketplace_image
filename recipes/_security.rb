@@ -48,10 +48,27 @@ user 'root' do
   action :lock
 end
 
-# delete /tmp last
-%w(/tmp /var/log /var/chef /etc/chef).each do |dir|
+%w(/var/chef /etc/chef).each do |dir|
   directory dir do
     action :delete
     recursive true
   end
 end
+
+directory '/var/log' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+execute 'rm -rf /var/log/*'
+
+directory '/tmp' do
+  owner 'root'
+  group 'root'
+  mode '0777'
+  action :create
+end
+
+execute 'rm -rf /tmp/*'

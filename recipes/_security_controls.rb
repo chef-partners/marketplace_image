@@ -53,7 +53,7 @@ control_group 'basic security' do
   control 'default passwords' do
     it 'users do not have a password' do
       user_directories.each do |user, _dir|
-        expect(command("passwd -S #{user}").stdout).to match(/Password locked/)
+        expect(command("passwd -S #{user}").stdout).to match(/Password locked|Alternate authentication scheme in use/)
       end
     end
   end

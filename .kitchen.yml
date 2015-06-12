@@ -20,6 +20,7 @@ platforms:
       region: us-east-1
     transport:
       username: ec2-user
+      ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
 
   - name: vagrant-centos-6.6
     driver_plugin: vagrant
