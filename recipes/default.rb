@@ -21,3 +21,7 @@ include_recipe 'marketplace_image::_bootstrap'
 include_recipe "marketplace_image::_#{node['marketplace_image']['marketplace']}"
 # Do host security last because it wipes out cookbooks in the cache
 include_recipe 'marketplace_image::_security'
+
+ruby_block 'hack to prevent node save' do
+  block { Chef::Config[:solo] = true }
+end

@@ -17,8 +17,30 @@
 # limitations under the License.
 #
 
-include_recipe 'openssh::default'
+# openssh::default does a late restart of sshd in the event that the sshd_config
+# template changes.  Force it to restart immediately so it isn't restarted
+# after we remove the keys.  During the restart it will auto generate keys if they
+# are missing, something that we want to happen when the image boots for the first
+# time.
 include_recipe 'marketplace_image::_security_controls'
+
+%w(openssh-clients openssh-server).each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
+template '/etc/ssh/sshd_config' do
+  source 'sshd_config.erb'
+  mode '0600'
+  owner 'root'
+  group 'root'
+end
+
+service 'sshd' do
+  supports [:restart, :reload, :status]
+  action [:enable, :start]
+end
 
 MarketplaceHelpers.user_directories.each do |_user, dir|
   %w(id_rsa id_rsa.pub authorized_keys).each do |ssh_file|
@@ -61,8 +83,6 @@ directory '/var/log' do
   action :create
 end
 
-execute 'rm -rf /var/log/*'
-
 directory '/tmp' do
   owner 'root'
   group 'root'
@@ -70,8 +90,10 @@ directory '/tmp' do
   action :create
 end
 
-execute 'rm -rf /tmp/*'
+execute 'rm -rf /tmp/*' do
+  not_if { Dir['/tmp/*'].empty? }
+end
 
-ruby_block 'hack to prevent node save' do
-  block { Chef::Config[:solo] = true }
+execute 'rm -rf /var/log/*' do
+  not_if { Dir['/var/log/*'].empty? }
 end

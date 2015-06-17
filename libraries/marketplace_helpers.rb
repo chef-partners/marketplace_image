@@ -9,7 +9,7 @@ module MarketplaceHelpers
   end
 
   def self.system_ssh_keys
-    %w(key key.pub dsa_key dsa_key.pub dsa_key rsa_key.pub rsa_key).map do |key|
+    %w(key key.pub dsa_key dsa_key.pub rsa_key.pub rsa_key).map do |key|
       "/etc/ssh/ssh_host_#{key}"
     end
   end

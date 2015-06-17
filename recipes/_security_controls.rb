@@ -71,7 +71,7 @@ control_group 'basic security' do
       end
 
       %w(/etc/chef/client.rb /etc/chef/client.pem).each do |chef_file|
-        expect(file(chef_file).to_not be_file)
+        expect(file(chef_file)).to_not be_file
       end
     end
   end
