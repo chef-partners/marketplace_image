@@ -8,5 +8,4 @@ version '0.1.0'
 
 depends 'chef-server-ingredient'
 depends 'motd'
-depends 'openssh'
 depends 'yum-centos'
