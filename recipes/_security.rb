@@ -48,6 +48,12 @@ user 'root' do
   action :lock
 end
 
+%w(/etc/chef/client.rb /etc/chef/client.pem).each do |chef_file|
+  file chef_file do
+    action :delete
+  end
+end
+
 directory '/var/log' do
   owner 'root'
   group 'root'
@@ -65,3 +71,7 @@ directory '/tmp' do
 end
 
 execute 'rm -rf /tmp/*'
+
+ruby_block 'hack to prevent node save' do
+  block { Chef::Config[:solo] = true }
+end

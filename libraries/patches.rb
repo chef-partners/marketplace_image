@@ -1,7 +1,8 @@
 # During the client run we remove all traces of the chef-zero run, eg: /tmp
-# The client does a node.save it attempts to write out the node json to /tmp
-# which no longer exists.  It then writes out a stacktrace.out.
-# This is a hack so we don't write the stacktrace.out to disk
+# When the client does a node.save it attempts to write out the node json to a
+# nested directory in /tmp which no longer exists.  It then writes out a
+# stacktrace.out because the node save blows up. This is a hack so we don't
+# write the stacktrace.out to disk
 class Chef
   # Hackity Hack, don't talk back
   class Application

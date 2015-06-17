@@ -19,7 +19,7 @@
 
 control_group 'basic security' do
   let(:user_directories) { MarketplaceHelpers.user_directories }
-  let(:system_ssh_keys) { MarketplaceHelpers.user_directories }
+  let(:system_ssh_keys) { MarketplaceHelpers.system_ssh_keys }
   let(:sudoers) { MarketplaceHelpers.sudoers }
 
   control 'ssh access' do
@@ -68,6 +68,10 @@ control_group 'basic security' do
     it 'does not have chef config' do
       user_directories.each do |_user, dir|
         expect(file("#{dir}/.chef")).to_not be_directory
+      end
+
+      %w(/etc/chef/client.rb /etc/chef/client.pem).each do |chef_file|
+        expect(file(chef_file).to_not be_file)
       end
     end
   end
