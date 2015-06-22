@@ -19,10 +19,10 @@ with_machine_options(
 
 version = run_context.cookbook_collection['marketplace_image'].metadata.version
 time = Time.now.strftime('%Y-%m-%d')
-node['run_state']['aws_products'] = []
+node.run_state['aws_products'] = []
 
 # Add a unique name to each product
-aws_products = node['marketplace_image']['aws_products'].each_with_object([]) do |product, memo|
+aws_products = node['marketplace_image']['aws_products'].to_a.each_with_object([]) do |product, memo|
   product['image_name'] = "marketplace_server_#{product['node_count']}_#{version}_#{time}"
   memo << product
 end
@@ -34,12 +34,13 @@ aws_products.each do |product|
     attribute %w(marketplace_image license_count), product['node_count']
     attribute %w(marketplace_image product_code), product['product_code']
   end
-end
 
-aws_products.each do |product|
   ruby_block "share #{product['image_name']} with the AWS Marketplace account" do
     block do
       aws_driver = run_context.chef_provisioning.current_driver
+      current_options = run_context.chef_provisioning.current_machine_options
+      chef_server = run_context.cheffish.current_chef_server
+
       aws_image = Chef::Resource::AwsImage.get_aws_object(
         product['image_name'],
         run_context: run_context,
@@ -49,29 +50,33 @@ aws_products.each do |product|
 
       product['ami_id'] = aws_image.id
 
+      aws = Chef::Provisioning::AWSDriver::Driver.from_url(aws_driver, current_options)
+
       # Find the snapshot that was used to create the AMI
       # Each AMI should only have a single snapshot but because we have to parse
       # the shapshot description we might get more than one. Share them all just in
       # case.
-      image_snapshots = aws_driver.ec2.snapshots.with_owner('self').select do |snap|
+      image_snapshots = aws.ec2.snapshots.with_owner('self').select do |snap|
         snap.description =~ /#{aws_image.id}/
       end
       product['snapshots'] = image_snapshots.map(&:id)
 
-      # Share the snapshots with the aws-marketplace account
+      # Share the snapshots and image with the aws-marketplace account
+      aws_image.permissions.add('679593333241')
       image_snapshots.each { |snap| snap.permissions.add('679593333241') }
 
+      # FIXME: this API call currently fails with our product codes
       # Set the product ID
-      aws_image.add_product_codes(product['product_code'])
+      # aws_image.add_product_codes(product['product_code'])
 
       # Add our product to the run state
-      node['run_state']['aws_products'] << product
+      node.run_state['aws_products'] << product
     end
   end
 end
 
 file "#{Chef::Config[:chef_repo_path]}/aws_images.json" do
-  content lazy { Chef::JSONCompat.to_json_pretty(node['run_state']['aws_products']) }
+  content lazy { Chef::JSONCompat.to_json_pretty(node.run_state['aws_products']) }
   action :create
 end
 
