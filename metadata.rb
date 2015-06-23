@@ -6,6 +6,6 @@ description 'Installs/Configures marketplace_image'
 long_description 'Installs/Configures marketplace_image'
 version '0.1.0'
 
-depends 'chef-server-ingredient'
+depends 'chef-ingredient'
 depends 'motd'
 depends 'yum-centos'

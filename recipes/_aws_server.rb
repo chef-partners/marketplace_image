@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: default
+# Recipe:: _aws_server
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -17,15 +17,6 @@
 # limitations under the License.
 #
 
-role = node['marketplace_image']['role']
-platform = node['marketplace_image']['platform']
+include_recipe 'marketplace_image::_aws_common'
 
-include_recipe "marketplace_image::_bootstrap_#{role}"
-include_recipe "marketplace_image::_#{platform}_#{role}"
-
-# Do host security last because it wipes out cookbooks in the cache
-include_recipe 'marketplace_image::_security'
-
-ruby_block 'hack to prevent node save' do
-  block { Chef::Config[:solo] = true }
-end
+# TODO: Add ec2 verification hook

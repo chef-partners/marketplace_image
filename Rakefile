@@ -1,15 +1,29 @@
-desc 'Build AWS Marketplace Images'
-task :build_aws do
-  # Start chef-zero
-  zero_pid = spawn('chef-zero')
-  Process.detach(zero_pid)
+def start_chef_zero
+  @zero_pid = spawn('chef-zero')
+  Process.detach(@zero_pid)
+  @zero_pid
+end
 
-  # Populate it with our cookbooks
+def stop_chef_zero
+  Process.kill('HUP', @zero_pid)
+end
+
+def berks_install
   system('berks install && berks upload')
+end
 
-  # Run the provisioning recipe
-  system("chef-client -c .chef/client.rb -o 'marketplace_image::_aws_publisher'")
+desc 'Build AWS Server Marketplace Images'
+task :publish_aws_server do
+  start_chef_zero
+  berks_install
+  system("chef-client -c .chef/client.rb -o 'marketplace_image::aws_server_publisher'")
+  stop_chef_zero
+end
 
-  # Reap chef-zero
-  Process.kill('HUP', zero_pid)
+desc 'Build AWS Analytics Marketplace Images'
+task :publish_aws_analytics do
+  start_chef_zero
+  berks_install
+  system("chef-client -c .chef/client.rb -o 'marketplace_image::aws_analytics_publisher'")
+  stop_chef_zero
 end

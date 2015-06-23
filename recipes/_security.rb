@@ -31,7 +31,7 @@ include_recipe 'marketplace_image::_security_controls'
 end
 
 template '/etc/ssh/sshd_config' do
-  source 'sshd_config.erb'
+  source 'sshd-config.erb'
   mode '0600'
   owner 'root'
   group 'root'

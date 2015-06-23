@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: _aws
+# Recipe:: _aws_common
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -29,7 +29,5 @@ user 'ec2-user' do
   shell '/bin/bash'
   action [:create, :lock]
 end
-
-# TODO: Add ec2 verification hook
 
 include_recipe 'marketplace_image::_aws_security'

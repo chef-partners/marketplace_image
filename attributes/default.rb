@@ -1,19 +1,11 @@
-default['marketplace_image']['marketplace'] = 'aws'
-default['marketplace_image']['chef_server_version'] = nil
-default['marketplace_image']['opscode_reporting_version'] = nil
-default['marketplace_image']['opscode_manage_version'] = nil
-default['marketplace_image']['license_count'] = 25
+default['marketplace_image']['platform'] = 'aws'
+default['marketplace_image']['role'] = 'server'
+default['marketplace_image']['chef_server_version'] = 'latest'
+default['marketplace_image']['reporting_version'] = 'latest'
+default['marketplace_image']['manage_version'] = 'latest'
+default['marketplace_image']['analytics_version'] = 'latest'
+default['marketplace_image']['license_count'] = 5
 default['marketplace_image']['support_email'] = 'aws@chef.io'
-default['marketplace_image']['aws_origin_image_id'] = 'ami-1d7d8a76'
-default['marketplace_image']['aws_products'] = [
-  { 'node_count' => 5, 'product_code' => 'dzsysio0zch27uban3y1c6wh7' },
-  { 'node_count' => 25, 'product_code' => '349645nlgkwcdfb8ndjeiwwp7' },
-  { 'node_count' => 50, 'product_code' => 'ckwjikuom9b37yaprlidzbqps' },
-  { 'node_count' => 100, 'product_code' => 'q995h875sbckcpafm8up762' },
-  { 'node_count' => 150, 'product_code' => '28ac4pvihsw8uoy2sukb0ihzu' },
-  { 'node_count' => 200, 'product_code' => '3nmsqv0670zsfjnqfnyd7lmdi' },
-  { 'node_count' => 250, 'product_code' => 'cfnnw6j8s75mhj3i5na0t4afq' }
-]
 
 default['openssh']['server'].tap do |server|
   server['protocol'] = 2

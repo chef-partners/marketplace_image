@@ -8,7 +8,7 @@ with_chef_server Chef::Config['chef_server_url']
 
 with_machine_options(
   bootstrap_options: {
-    image_id: node['marketplace_image']['aws_origin_image_id'],
+    image_id: node['marketplace_image']['origin_ami'],
     instance_type: 'c4.large',
     availability_zone: 'us-east-1a',
     key_name: 'marketplace_builder',
@@ -22,7 +22,7 @@ time = Time.now.strftime('%Y-%m-%d')
 node.run_state['aws_products'] = []
 
 # Add a unique name to each product
-aws_products = node['marketplace_image']['aws_products'].to_a.each_with_object([]) do |product, memo|
+aws_products = node['marketplace_image']['aws']['server_products'].to_a.each_with_object([]) do |product, memo|
   product['image_name'] = "marketplace_server_#{product['node_count']}_#{version}_#{time}"
   memo << product
 end

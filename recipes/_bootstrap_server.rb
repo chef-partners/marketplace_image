@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: _bootstrap
+# Recipe:: _bootstrap_server
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -19,18 +19,18 @@
 
 include_recipe 'yum-centos::default'
 
-chef_server_ingredient 'chef-server-core' do
+chef_ingredient 'chef-server' do
   version node['marketplace_image']['chef_server_version']
   action :install
 end
 
-chef_server_ingredient 'opscode-reporting' do
-  version node['marketplace_image']['opscode_reporting_version']
+chef_ingredient 'reporting' do
+  version node['marketplace_image']['reporting_version']
   action :install
 end
 
-chef_server_ingredient 'opscode-manage' do
-  version node['marketplace_image']['opscode_manage_version']
+chef_ingredient 'manage' do
+  version node['marketplace_image']['manage_version']
   action :install
 end
 
