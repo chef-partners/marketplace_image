@@ -21,17 +21,17 @@ include_recipe 'yum-centos::default'
 
 chef_ingredient 'chef-server' do
   version node['marketplace_image']['chef_server_version']
-  action :install
+  action :upgrade
 end
 
 chef_ingredient 'reporting' do
   version node['marketplace_image']['reporting_version']
-  action :install
+  action :upgrade
 end
 
 chef_ingredient 'manage' do
   version node['marketplace_image']['manage_version']
-  action :install
+  action :upgrade
 end
 
 %w(opscode opscode-manage).each do |dir|
@@ -67,13 +67,9 @@ template '/opt/opscode/embedded/service/omnibus-ctl/marketplace_setup.rb' do
 end
 
 motd '50-chef-marketplace-appliance' do
-  source 'marketplace-motd.erb'
+  source 'server-motd.erb'
   cookbook 'marketplace_image'
   variables support_email: node['marketplace_image']['support_email']
-end
-
-package 'cloud-init' do
-  action :install
 end
 
 directory '/etc/chef/ohai/hints' do

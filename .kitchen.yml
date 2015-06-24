@@ -2,6 +2,7 @@
 provisioner:
   name: chef_zero
   require_chef_omnibus: true
+  chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
   client_rb:
     audit_mode: :enabled
 

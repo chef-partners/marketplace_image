@@ -8,7 +8,7 @@ with_chef_server Chef::Config['chef_server_url']
 
 with_machine_options(
   bootstrap_options: {
-    image_id: node['marketplace_image']['origin_ami'],
+    image_id: node['marketplace_image']['aws']['origin_ami'],
     instance_type: 'c4.large',
     availability_zone: 'us-east-1a',
     key_name: 'marketplace_builder',
@@ -31,6 +31,8 @@ end
 aws_products.each do |product|
   machine_image product['image_name'] do
     recipe 'marketplace_image::default'
+    attribute %w(marketplace_image role), 'server'
+    attribute %w(marketplace_image platform), 'aws'
     attribute %w(marketplace_image license_count), product['node_count']
     attribute %w(marketplace_image product_code), product['product_code']
   end

@@ -42,11 +42,15 @@ service 'sshd' do
   action [:enable, :start]
 end
 
-MarketplaceHelpers.user_directories.each do |_user, dir|
+MarketplaceHelpers.user_directories.each do |usr, dir|
   %w(id_rsa id_rsa.pub authorized_keys).each do |ssh_file|
     file ::File.join(dir, '.ssh', ssh_file) do
       action :delete
     end
+  end
+
+  user usr do
+    action :lock
   end
 
   file ::File.join(dir, '.bash_history') do
@@ -64,10 +68,6 @@ MarketplaceHelpers.sudoers.each do |sudo_user|
   file sudo_user do
     action :delete
   end
-end
-
-user 'root' do
-  action :lock
 end
 
 %w(/etc/chef/client.rb /etc/chef/client.pem).each do |chef_file|

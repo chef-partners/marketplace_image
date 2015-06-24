@@ -30,4 +30,14 @@ user 'ec2-user' do
   action [:create, :lock]
 end
 
+package 'cloud-init' do
+  action :install
+end
+
+template '/etc/cloud/cloud.cfg' do
+  source 'ec2-cloud-init.erb'
+  cookbook 'marketplace_image'
+  action :create
+end
+
 include_recipe 'marketplace_image::_aws_security'

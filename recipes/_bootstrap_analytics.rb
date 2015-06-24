@@ -42,10 +42,6 @@ motd '50-chef-marketplace-appliance' do
   variables support_email: node['marketplace_image']['support_email']
 end
 
-package 'cloud-init' do
-  action :install
-end
-
 directory '/etc/chef/ohai/hints' do
   owner 'root'
   group 'root'
