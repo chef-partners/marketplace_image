@@ -4,7 +4,7 @@ maintainer_email 'partnereng@chef.io'
 license 'Apache 2.0'
 description 'Installs/Configures marketplace_image'
 long_description 'Installs/Configures marketplace_image'
-version '0.1.1'
+version '0.1.2'
 
 depends 'chef-ingredient'
 depends 'motd'

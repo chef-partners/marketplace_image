@@ -96,7 +96,14 @@ class MarketplaceSetup
     REQUIRED_OPTIONS.each do |opt|
       next if options.send(opt)
       if opt == 'password'
-        options[opt] = ask("Please enter your #{opt}:") { |c| c.echo = '*' }
+        p1 = ask('Please enter your password:') { |c| c.echo = '*' }
+        p2 = ask('Please enter your password again:') { |c| c.echo = '*' }
+        if p1 == p2
+          options[opt] = p1
+        else
+          puts 'Your passwords did not match'
+          redo
+        end
       else
         options[opt] = ask("Please enter your #{opt}:")
       end
@@ -182,9 +189,11 @@ class MarketplaceSetup
       "\n\nYou're all set!\n",
       "Next you'll want to log into the Chef Web Management console:",
       "https://#{fqdn}/login\n",
-      "Make sure you use your new username '#{options.username}' to login\n",
+      'In order to use TLS we had to generate a self-signed certificate which',
+      "might cause a warning in your browser, you can safely ignore it.\n",
+      "Use your username '#{options.username}' instead of your email address to login\n",
       "After you've logged in you'll want to download the Starter Kit:",
-      "https://#{fqdn}/organizations/#{options.organization}/getting_started\n\n"
+      "https://#{fqdn}/organizations/#{options.organization}/getting_started\n"
     ].join("\n")
 
     puts(msg)
