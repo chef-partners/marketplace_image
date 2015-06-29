@@ -6,6 +6,12 @@ with_driver 'aws::us-east-1'
 
 with_chef_server Chef::Config['chef_server_url']
 
+aws_key_pair 'marketplace_builder' do
+  private_key_path ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH']
+  public_key_path ENV['MARKETPLACE_BUILDER_PUB_KEY_PATH']
+  allow_overwrite true
+end
+
 with_machine_options(
   bootstrap_options: {
     image_id: node['marketplace_image']['aws']['origin_ami'],
