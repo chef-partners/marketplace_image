@@ -22,6 +22,9 @@ platforms:
     transport:
       username: ec2-user
       ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
+    attributes:
+      marketplace_image:
+        platform: aws
 
   - name: vagrant-centos-6.6
     driver_plugin: vagrant
@@ -35,6 +38,13 @@ platforms:
         memory: 4096
 
 suites:
-  - name: marketplace_image
+  - name: chef_server
     run_list: test::default
     attributes:
+      marketplace_image:
+        role: server
+  - name: analytics
+    run_list: test::default
+    attributes:
+      marketplace_image:
+        role: analytics
