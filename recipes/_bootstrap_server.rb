@@ -34,6 +34,10 @@ chef_ingredient 'manage' do
   action :upgrade
 end
 
+chef_ingredient 'analytics' do
+  action :uninstall
+end
+
 %w(opscode opscode-manage).each do |dir|
   directory ::File.join('etc', dir) do
     owner 'root'

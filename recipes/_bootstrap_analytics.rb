@@ -19,21 +19,21 @@
 
 include_recipe 'yum-centos::default'
 
-chef_ingredient 'analytics' do
-  version node['marketplace_image']['analytics_version']
-  action :install
-end
-
-chef_ingredient 'chef-server' do
-  action :uninstall
-end
-
 chef_ingredient 'reporting' do
   action :uninstall
 end
 
 chef_ingredient 'manage' do
   action :uninstall
+end
+
+chef_ingredient 'chef-server' do
+  action :uninstall
+end
+
+chef_ingredient 'analytics' do
+  version node['marketplace_image']['analytics_version']
+  action :upgrade
 end
 
 motd '50-chef-marketplace-appliance' do
