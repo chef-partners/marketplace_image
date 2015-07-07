@@ -172,6 +172,7 @@ class MarketplaceSetup
   end
 
   def create_default_org
+    retries = 0
     cmd = [
       'chef-server-ctl org-create',
       options.organization,
@@ -179,7 +180,12 @@ class MarketplaceSetup
       "-a #{options.username}"
     ].join(' ')
 
-    run_command(cmd)
+    until retries == 5
+      break if run_command(cmd).success?
+      retries += 1
+      puts "retry (#{retries}/5) for: #{cmd}"
+      sleep 2
+    end
   end
 
   def redirect_to_webui
