@@ -104,6 +104,12 @@ class MarketplaceSetup
           puts 'Your passwords did not match'
           redo
         end
+      elsif opt == 'organization'
+        orgname = ask('Please enter an orgname(Only lowercase):') do |o|
+          o.case = :down
+          o.validate = /\A[a-z0-9][a-z0-9_-]{0,254}\Z/
+        end
+        options[opt] = orgname
       else
         options[opt] = ask("Please enter your #{opt}:")
       end
