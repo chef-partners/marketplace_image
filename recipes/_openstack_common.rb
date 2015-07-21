@@ -27,7 +27,7 @@ end
 user 'openstack-user' do
   home '/home/openstack-user'
   shell '/bin/bash'
-  action [:create, :lock]
+  action [:create]
 end
 
 package 'cloud-init' do
