@@ -137,6 +137,8 @@ class MarketplaceSetup
         "#{ohai.data['public_hostname']}.cloudapp.net"
       elsif ohai.on_ec2?
         ohai.data['cloud_v2']['public_hostname']
+      elsif ohai.on_openstack?
+        ohai.data['cloud_v2']['public_hostname']
       end
 
     ::File.open('/etc/opscode/chef-server.rb', 'a') do |f|

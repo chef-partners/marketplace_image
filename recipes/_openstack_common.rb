@@ -21,6 +21,20 @@ selinux_state "SELinux Permissive" do
   action :permissive
 end
 
+include_recipe 'iptables'
+
+iptables_rule 'ssh' do
+  action :enable
+end
+
+iptables_rule 'https' do
+  action :enable
+end
+
+iptables_rule 'http' do
+  action :enable
+end
+
 file '/etc/chef/ohai/hints/openstack.json' do
   owner 'root'
   group 'root'
