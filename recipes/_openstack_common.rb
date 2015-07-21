@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+selinux_state "SELinux Permissive" do
+  action :permissive
+end
+
 file '/etc/chef/ohai/hints/openstack.json' do
   owner 'root'
   group 'root'
@@ -27,7 +31,7 @@ end
 user 'openstack-user' do
   home '/home/openstack-user'
   shell '/bin/bash'
-  action [:create]
+  action [:create, :lock]
 end
 
 package 'cloud-init' do

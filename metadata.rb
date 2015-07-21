@@ -8,4 +8,5 @@ version '0.1.4'
 
 depends 'chef-ingredient'
 depends 'motd'
+depends 'selinux'
 depends 'yum-centos'
