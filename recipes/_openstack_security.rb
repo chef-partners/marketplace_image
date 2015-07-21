@@ -24,5 +24,9 @@ control_group 'openstack' do
       expect(user('openstack-user')).to have_home_directory('/home/openstack-user')
       expect(user('openstack-user')).to have_login_shell('/bin/bash')
     end
+
+     it 'does not have a password' do
+      expect(command('passwd -S openstack-user').stdout).to match(/Password locked/)
+    end
   end
 end
