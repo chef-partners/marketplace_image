@@ -1,4 +1,4 @@
-default['marketplace_image']['aws']['origin_ami'] = 'ami-0372b468'
+default['marketplace_image']['aws']['origin_ami'] = 'ami-df01ceb4'
 default['marketplace_image']['aws']['server_products'] = [
   { 'node_count' => 5, 'product_code' => 'dzsysio0zch27uban3y1c6wh7' },
   { 'node_count' => 25, 'product_code' => '349645nlgkwcdfb8ndjeiwwp7' },
