@@ -4,7 +4,7 @@ require 'highline/import'
 require 'chef/json_compat'
 require 'ohai/system'
 
-add_command_under_category 'marketplace-setup', 'marketplace', 'Set up the Chef Server Marketplace Appliance', 2 do
+add_command_under_category 'marketplace-setup', 'marketplace', 'Set up the Chef server Marketplace Appliance', 2 do
   options = OpenStruct.new
 
   OptionParser.new do |opts|
@@ -145,7 +145,7 @@ class MarketplaceSetup
   end
 
   def reconfigure_chef_server
-    puts 'Please wait while we set up the Chef Server. This may take a few minutes to complete'
+    puts 'Please wait while we set up the Chef server. This may take a few minutes to complete.'
     run_command('chef-server-ctl reconfigure')
   end
 
@@ -193,9 +193,9 @@ class MarketplaceSetup
     fqdn = chef_running['private_chef']['lb']['api_fqdn']
     msg = [
       "\n\nYou're all set!\n",
-      "Next you'll want to log into the Chef Web Management console:",
+      "Next you'll want to log into the Chef management console:",
       "https://#{fqdn}/login\n",
-      'In order to use TLS we had to generate a self-signed certificate which',
+      'In order to use Transport Layer Security (TLS) we had to generate a self-signed certificate which',
       "might cause a warning in your browser, you can safely ignore it.\n",
       "Use your username '#{options.username}' instead of your email address to login\n",
       "After you've logged in you'll want to download the Starter Kit:",

@@ -34,7 +34,7 @@ AWS
   <tr>
     <td><tt>['marketplace_image']['chef_server_version']</tt></td>
     <td>String</td>
-    <td>Which version of the Chef Server package to install</td>
+    <td>Which version of the Chef server package to install</td>
     <td><tt>latest</tt></td>
   </tr>
   <tr>
@@ -58,7 +58,7 @@ AWS
   <tr>
     <td><tt>['marketplace_image']['analytics_version']</tt></td>
     <td>String</td>
-    <td>The license count for the Chef Server</td>
+    <td>The license count for the Chef server</td>
     <td><tt>5</tt></td>
   </tr>
   <tr>
