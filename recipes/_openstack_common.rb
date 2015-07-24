@@ -23,15 +23,15 @@ end
 
 include_recipe 'iptables'
 
-iptables_rule 'ssh' do
+iptables_rule 'openstack-ssh-iptables' do
   action :enable
 end
 
-iptables_rule 'https' do
+iptables_rule 'openstack-https-iptables' do
   action :enable
 end
 
-iptables_rule 'http' do
+iptables_rule 'openstack-http-iptables' do
   action :enable
 end
 
