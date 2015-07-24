@@ -7,5 +7,7 @@ long_description 'Installs/Configures marketplace_image'
 version '0.1.4'
 
 depends 'chef-ingredient'
+depends 'iptables'
 depends 'motd'
+depends 'selinux'
 depends 'yum-centos'

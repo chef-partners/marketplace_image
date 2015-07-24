@@ -73,7 +73,10 @@ end
 motd '50-chef-marketplace-appliance' do
   source 'server-motd.erb'
   cookbook 'marketplace_image'
-  variables support_email: node['marketplace_image']['support_email']
+  variables(
+    support_email: node['marketplace_image']['support_email'],
+    marketplace_url: node['marketplace_image']['marketplace_url']
+  )
 end
 
 directory '/etc/chef/ohai/hints' do

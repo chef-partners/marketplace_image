@@ -6,6 +6,7 @@ default['marketplace_image']['manage_version'] = 'latest'
 default['marketplace_image']['analytics_version'] = 'latest'
 default['marketplace_image']['license_count'] = 5
 default['marketplace_image']['support_email'] = 'aws@chef.io'
+default['marketplace_image']['marketplace_url'] = 'https://docs.chef.io/aws_marketplace.html'
 
 default['openssh']['server'].tap do |server|
   server['protocol'] = 2
