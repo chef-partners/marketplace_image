@@ -17,15 +17,6 @@
 # limitations under the License.
 #
 
-role = node['marketplace_image']['role']
-platform = node['marketplace_image']['platform']
-
-include_recipe "marketplace_image::_bootstrap_#{role}"
-include_recipe "marketplace_image::_#{platform}_#{role}"
-
-# Do host security last because it wipes out cookbooks in the cache
-include_recipe 'marketplace_image::_security'
-
 ruby_block 'hack to prevent node save' do
   block { Chef::Config[:solo] = true }
 end

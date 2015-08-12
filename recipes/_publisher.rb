@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: _aws_server
+# Recipe:: _publisher
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -17,6 +17,14 @@
 # limitations under the License.
 #
 
-include_recipe 'marketplace_image::_aws_common'
-
-# TODO: Add ec2 verification hook
+marketplace_image node['marketplace_image']['role'] do
+  platform node['marketplace_image']['platform']
+  default_user node['marketplace_image']['default_user']
+  support_email node['marketplace_image']['support_email']
+  reporting_cron node['marketplace_image']['reporting_cron']
+  publish node['marketplace_image']['publish']
+  disable_outbound_traffic node['marketplace_image']['disable_outbound_traffic']
+  license_count node['marketplace_image']['license_count']
+  doc_url node['marketplace_image']['doc_url']
+  product_code node['marketplace_image']['product_code']
+end

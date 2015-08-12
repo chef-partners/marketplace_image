@@ -23,8 +23,10 @@ platforms:
       username: ec2-user
       ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
     attributes:
-      marketplace_image:
+      test:
         platform: aws
+        default_user: ec2-user
+        support_email: aws@chef.io
 
   - name: vagrant-centos-6.6
     driver_plugin: vagrant
@@ -41,10 +43,10 @@ suites:
   - name: chef_server
     run_list: test::default
     attributes:
-      marketplace_image:
+      test:
         role: server
   - name: analytics
     run_list: test::default
     attributes:
-      marketplace_image:
+      test:
         role: analytics
