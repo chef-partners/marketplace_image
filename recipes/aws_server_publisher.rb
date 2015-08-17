@@ -34,7 +34,7 @@ end
 # Create the images
 aws_products.each do |product|
   machine_image product['image_name'] do
-    recipe 'marketplace_image::default'
+    recipe 'marketplace_image::_publisher'
     attribute %w(marketplace_image role), 'server'
     attribute %w(marketplace_image platform), 'aws'
     attribute %w(marketplace_image license_count), product['node_count']
