@@ -14,7 +14,7 @@ platforms:
       transport:
         username: ec2-user
         ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
-      instance_type: t2.medium
+      instance_type: m4.xlarge
       associate_public_ip: true
       aws_ssh_key_id: marketplace_builder
       security_groups: marketplace_builder
@@ -50,3 +50,9 @@ suites:
     attributes:
       test:
         role: analytics
+  - name: chef_server_seed
+    run_list: "marketplace_image::_publisher"
+    attributes:
+      marketplace_image:
+        platform: aws
+        default_user: ec2-user

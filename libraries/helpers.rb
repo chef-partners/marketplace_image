@@ -119,7 +119,7 @@ module MarketplaceImageCookbook
       config << "support['email'] = '#{new_resource.support_email}'"
       config << "documentation['url'] = '#{new_resource.doc_url}'"
       config << "reporting['cron']['enabled'] = '#{new_resource.reporting_cron}'"
-      config << "publish '#{new_resource.publish}'"
+      config << "publishing['enabled'] = #{new_resource.publish}"
       config << "diasable_outboud_traffic '#{new_resource.disable_outbound_traffic}'"
       config << new_resource.marketplace_config
       config.join("\n")

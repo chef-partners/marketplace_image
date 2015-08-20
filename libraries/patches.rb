@@ -19,4 +19,10 @@ class Chef
       end
     end
   end
+
+  class Node
+    def save
+      true
+    end
+  end
 end

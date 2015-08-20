@@ -7,8 +7,10 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Max: 200
 Metrics/AbcSize:
-  Max: 30
+  Max: 50
 Style/GuardClause:
+  Enabled: false
+Style/SingleSpaceBeforeFirstArg:
   Enabled: false
 Documentation:
   Enabled: false

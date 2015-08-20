@@ -26,7 +26,7 @@ image_name = "marketplace_analytics_#{version}_#{time}"
 node.run_state['image_name'] = image_name
 
 machine_image image_name do
-  recipe 'marketplace_image::default'
+  recipe 'marketplace_image::_publisher'
   attribute %w(marketplace_image role), 'analytics'
   attribute %w(marketplace_image platform), 'aws'
 end
