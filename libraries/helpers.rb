@@ -87,7 +87,7 @@ module MarketplaceImageCookbook
 
     def uninstall_server
       chef_ingredient 'chef-server' do
-        action :uninstallp
+        action :uninstall
       end
 
       chef_ingredient 'reporting' do

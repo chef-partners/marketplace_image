@@ -43,21 +43,22 @@ aws_products.each do |product|
   end
 end
 
-# Write out an image manifest
-file File.join(Dir.pwd, 'server_images.json') do
-  content (lazy do
-    Chef::JSONCompat.to_json_pretty(
-      node.run_state['marketplace_amis'].map do |image|
-        {
-          name: image.name,
-          id: image.image_id,
-          created_at: image.creation_date,
-          product_codes: image.product_codes
-        }
-      end
-    )
-  end)
+# Build manifest
+manifest = proc do
+  node.run_state['marketplace_amis'].each_with_object([]) do |image, memo|
+    item = {}
+    # AWS objects in the AWS SDK are unreliable, only add data if it exists
+    item['name'] = image.name if image.respond_to?(:name)
+    item['id'] = image.image_id if image.respond_to?(:image_id)
+    item['created_at'] = image.creation_date if image.respond_to?(:creation_date)
+    item['product_codes'] = image.product_codes if image.respond_to?(:product_codes)
+    memo << item
+  end
+end
 
+# Write manifest
+file File.join(Dir.pwd, 'server_images.json') do
+  content lazy { Chef::JSONCompat.to_json_pretty(manifest.call) }
   action :create
 end
 
