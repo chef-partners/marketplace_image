@@ -30,8 +30,6 @@ module MarketplaceImageCookbook
     end
 
     def install_server
-      include_recipe 'yum-centos::default'
-
       chef_ingredient 'chef-server' do
         config server_config
         version new_resource.server_version
@@ -55,34 +53,31 @@ module MarketplaceImageCookbook
       end
 
       ingredient_config 'manage'
-
-      chef_ingredient 'analytics' do
-        action :uninstall
-      end
     end
 
     def install_analytics
-      include_recipe 'yum-centos::default'
-
       chef_ingredient 'analytics' do
         config new_resource.analytics_config
         version new_resource.analytics_version
-        action :install
+        action :upgrade
       end
 
       ingredient_config 'analytics'
+    end
 
-      chef_ingredient 'chef-server' do
-        action :uninstall
+    def install_compliance
+      chef_ingredient 'chef-compliance' do
+        config new_resource.compliance_config
+        version new_resource.compliance_version
+        action :upgrade
       end
 
-      chef_ingredient 'reporting' do
-        action :uninstall
-      end
+      ingredient_config 'chef-compliance'
+    end
 
-      chef_ingredient 'manage' do
-        action :uninstall
-      end
+    def install_aio
+      install_server
+      install_analytics
     end
 
     def uninstall_server
@@ -111,6 +106,33 @@ module MarketplaceImageCookbook
       end
     end
 
+    def uninstall_compliance
+      chef_ingredient 'chef-compliance' do
+        action :uninstall
+      end
+    end
+
+    def prepare_machine
+      include_recipe 'yum-centos::default'
+
+      # Blow away old config to trigger security recipe cause we're gonna golden
+      # image like it's 1999
+      file '/etc/chef-marketplace/chef-marketplace-running.json' do
+        action :delete
+        only_if { new_resource.publish }
+      end
+
+      # This might be around from older omnibus-marketplace installs
+      link '/opt/chef-marketplace/chef-server-plugin.rb' do
+        to '/var/opt/opscode/plugins/chef-marketplace.rb'
+        action :delete
+        ignore_failure true
+      end
+
+      # Update!
+      execute 'yum update -y'
+    end
+
     def marketplace_config
       config = []
       config << "role '#{new_resource.role}'"
@@ -118,17 +140,17 @@ module MarketplaceImageCookbook
       config << "user '#{new_resource.default_user}'"
       config << "support['email'] = '#{new_resource.support_email}'"
       config << "documentation['url'] = '#{new_resource.doc_url}'"
-      config << "reporting['cron']['enabled'] = '#{new_resource.reporting_cron}'"
+      config << "reporting['cron']['enabled'] = #{new_resource.reporting_cron}"
       config << "publishing['enabled'] = #{new_resource.publish}"
-      config << "diasable_outboud_traffic '#{new_resource.disable_outbound_traffic}'"
+      config << "diasable_outboud_traffic #{new_resource.disable_outbound_traffic}"
+      config << "license_count #{new_resource.license_count.to_i}"
       config << new_resource.marketplace_config
       config.join("\n")
     end
 
     def server_config
       config = []
-      config << "topology 'standalone'"
-      config << "license['nodes'] = #{new_resource.license_count}"
+      config << "topology 'chef-marketplace'"
       config << new_resource.server_config
       config.join("\n")
     end

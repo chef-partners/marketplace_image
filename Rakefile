@@ -12,11 +12,19 @@ def berks_install
   system('berks install && berks upload')
 end
 
-desc 'Build AWS Server Marketplace Images'
-task :publish_aws_server do
+desc 'Build AWS Server AIO Images'
+task :publish_aws_server_aio do
   start_chef_zero
   berks_install
-  system("chef-client -c .chef/client.rb -o 'marketplace_image::aws_server_publisher'")
+  system("chef-client -c .chef/client.rb -o 'marketplace_image::aws_aio_publisher'")
+  stop_chef_zero
+end
+
+desc 'Build AWS Compliance Images'
+task :publish_aws_compliance do
+  start_chef_zero
+  berks_install
+  system("chef-client -c .chef/client.rb -o 'marketplace_image::aws_compliance_publisher'")
   stop_chef_zero
 end
 

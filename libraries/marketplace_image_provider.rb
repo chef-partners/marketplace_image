@@ -34,21 +34,25 @@ class Chef
       end
 
       action :install do
+        prepare_machine
+        install_marketplace
+
         case new_resource.role
         when 'server' then install_server
+        when 'aio' then install_aio
         when 'analytics' then install_analytics
+        when 'compliance' then install_compliance
         end
-
-        install_marketplace
       end
 
       action :uninstall do
+        uninstall_marketplace
+
         case new_resource.role
         when 'server' then uninstall_server
+        when 'aio' then install_aio
         when 'analytics' then uninstall_analytics
         end
-
-        uninstall_marketplace
       end
     end
   end

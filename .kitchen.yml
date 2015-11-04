@@ -3,14 +3,12 @@ provisioner:
   name: chef_zero
   require_chef_omnibus: true
   chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
-  client_rb:
-    audit_mode: :enabled
 
 platforms:
   - name: aws-centos-6.6
     driver_plugin: ec2
     driver_config:
-      image_id: ami-0372b468
+      image_id: ami-9bc3aafe
       transport:
         username: ec2-user
         ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
@@ -50,7 +48,19 @@ suites:
     attributes:
       test:
         role: analytics
-  - name: chef_server_seed
+  - name: compliance
+    run_list: test::default
+    attributes:
+      test:
+        role: compliance
+  - name: aws_compliance_seed
+    run_list: "marketplace_image::_publisher"
+    attributes:
+      marketplace_image:
+        platform: aws
+        default_user: ec2-user
+        role: compliance
+  - name: aws_aio_seed
     run_list: "marketplace_image::_publisher"
     attributes:
       marketplace_image:

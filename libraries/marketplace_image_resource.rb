@@ -55,6 +55,10 @@ class Chef
       # Analytics
       attribute :analytics_config, kind_of: [String, NilClass], default: nil
       attribute :analytics_version, kind_of: [String, NilClass], default: 'latest'
+
+      # Compliance
+      attribute :compliance_config, kind_of: [String, NilClass], default: nil
+      attribute :compliance_version, kind_of: [String, NilClass], default: 'latest'
     end
   end
 end
