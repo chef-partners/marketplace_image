@@ -38,6 +38,7 @@ class Chef
       attribute :reporting_cron, kind_of: [TrueClass, FalseClass], default: true
       attribute :publish, kind_of: [TrueClass, FalseClass], default: true
       attribute :disable_outbound_traffic, kind_of: [TrueClass, FalseClass], default: false
+      attribute :license_type, kind_of: String, default: 'fixed'
 
       # Chef Server
       attribute :license_count, kind_of: [String, Integer], default: 5

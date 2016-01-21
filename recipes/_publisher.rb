@@ -25,6 +25,7 @@ marketplace_image node['marketplace_image']['role'] do
   publish                   node['marketplace_image']['publish']
   disable_outbound_traffic  node['marketplace_image']['disable_outbound_traffic']
   license_count             node['marketplace_image']['license_count']
+  license_type              node['marketplace_image']['license_type']
   doc_url                   node['marketplace_image']['doc_url']
   product_code              node['marketplace_image']['product_code']
 end
