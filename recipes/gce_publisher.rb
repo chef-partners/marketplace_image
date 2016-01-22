@@ -42,8 +42,9 @@ end
 gce_images.each do |image|
   node_attributes = {
     'marketplace_image' => {
-      'role' => role,
-      'platform' => 'gce',
+      'instance_name'     => image['name'],
+      'role'              => role,
+      'platform'          => 'gce',
       'license_count'     => image['node_count'],
       'license_type'      => license_type,
       'support_email'     => node['marketplace_image']['gce'][role]['support_email'],

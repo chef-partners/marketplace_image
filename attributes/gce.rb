@@ -1,9 +1,9 @@
-default['marketplace_image']['gce']['public']['aio']['image_id'] = 'ami-1e2c0a74'
+default['marketplace_image']['gce']['public']['aio']['image_id'] = 'centos-7-v20160119'
 default['marketplace_image']['gce']['public']['aio']['products'] = [
   { 'node_count' => 5 }
 ]
 
-default['marketplace_image']['gce']['public']['compliance']['ami'] = 'ami-dcfcdbb6'
+default['marketplace_image']['gce']['public']['compliance']['image_id'] = 'centos-7-v20160119'
 default['marketplace_image']['gce']['public']['compliance']['products'] = [
   { 'node_count' => 5 }
 ]
