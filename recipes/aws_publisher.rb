@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: marketplace_image
-# Recipe:: aws_aio_publisher
+# Recipe:: aws_publisher
 #
 # Copyright (C) 2015 Chef Software, Inc.
 #
@@ -17,29 +17,51 @@
 # limitations under the License.
 #
 
-version = run_context.cookbook_collection['marketplace_image'].metadata.version
+Chef::Config['chef_provisioning'] ||= Mash.new
+Chef::Config['chef_provisioning']['machine_max_wait_time'] = 240
+Chef::Config['chef_provisioning']['image_max_wait_time'] = 500
+
 time = Time.now.strftime('%Y-%m-%d')
+marketplace = node['marketplace_image']['marketplace']
+product = node['marketplace_image']['product']
+role = product.split('_').last
+license_type = product =~ /flexible/ ? 'flexible' : 'fixed'
+disable_outbound_traffic = marketplace =~ /ic/ ? true : false
+ami_id = node['marketplace_image']['aws'][marketplace][product]['ami']
 
 # Add a unique name to each product
-aws_products = node['marketplace_image']['aws']['aio']['products'].to_a.each_with_object([]) do |product, memo|
-  product['image_name'] = "chef_server_aio_#{product['node_count']}_#{version}_#{time}"
-  memo << product
+aws_images = node['marketplace_image']['aws'][marketplace][product]['products'].to_a.each_with_object([]) do |item, memo|
+  item['name'] = "chef_#{role}_#{marketplace}"
+  item['name'] << "_#{item['node_count']}" if license_type == 'fixed'
+  item['name'] << '_flexible' if license_type == 'flexible'
+  item['name'] << "_#{time}"
+  memo << item
 end
 
 # Create the images
-aws_products.each do |product|
-  marketplace_ami product['image_name'] do
-    source_image_id node['marketplace_image']['aws']['aio']['origin_ami']
+aws_images.each do |image|
+  marketplace_ami image['name'] do
+    source_image_id ami_id
     instance_type   'm4.xlarge'
     ssh_keyname     'marketplace_builder'
     ssh_username    'ec2-user'
+    audit           false
+    machine_options(
+      convergence_options: {
+        chef_version: '12.6.0',
+        chef_client_timeout: 7200
+      }
+    )
 
     recipe    'marketplace_image::_publisher'
-    attribute %w(marketplace_image role), 'aio'
+    attribute %w(marketplace_image role), role
     attribute %w(marketplace_image platform), 'aws'
     attribute %w(marketplace_image publish), true
-    attribute %w(marketplace_image license_count), product['node_count']
-    attribute %w(marketplace_image product_code), product['product_code']
+    attribute %w(marketplace_image license_count), image['node_count']
+    attribute %w(marketplace_image product_code), image['product_code']
+    attribute %w(marketplace_image license_type), license_type
+    attribute %w(marketplace_image disable_outboud_traffic), disable_outbound_traffic
+    attribute %w(marketplace_image doc_url), node['marketplace_image']['aws'][role]['doc_url']
   end
 end
 
@@ -57,7 +79,7 @@ manifest = proc do
 end
 
 # Write manifest
-file File.join(Dir.pwd, 'marketplace_amis.json') do
+file File.expand_path(File.join('~', "#{role}_#{marketplace}_amis.json")) do
   content lazy { Chef::JSONCompat.to_json_pretty(manifest.call) }
   action :create
 end

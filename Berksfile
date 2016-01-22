@@ -1,6 +1,7 @@
 source 'https://supermarket.chef.io'
 
-cookbook 'chef-ingredient', github: 'chef-cookbooks/chef-ingredient', branch: 'ryan/compliance'
+cookbook 'chef-ingredient'
+cookbook 'fancy_execute', git: "https://github.com/irvingpop/fancy_execute.git"
 
 metadata
 

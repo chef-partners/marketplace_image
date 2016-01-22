@@ -43,6 +43,10 @@ class Chef
         when 'analytics' then install_analytics
         when 'compliance' then install_compliance
         end
+
+        execute 'chef-marketplace-ctl prepare-for-publishing yes' do
+          only_if { new_resource.publish }
+        end
       end
 
       action :uninstall do
@@ -50,7 +54,7 @@ class Chef
 
         case new_resource.role
         when 'server' then uninstall_server
-        when 'aio' then install_aio
+        when 'aio' then uninstall_aio
         when 'analytics' then uninstall_analytics
         end
       end

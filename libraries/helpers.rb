@@ -66,13 +66,13 @@ module MarketplaceImageCookbook
     end
 
     def install_compliance
-      chef_ingredient 'chef-compliance' do
-        config new_resource.compliance_config
+      chef_ingredient 'compliance' do
+        config compliance_config
         version new_resource.compliance_version
         action :upgrade
       end
 
-      ingredient_config 'chef-compliance'
+      ingredient_config 'compliance'
     end
 
     def install_aio
@@ -107,7 +107,7 @@ module MarketplaceImageCookbook
     end
 
     def uninstall_compliance
-      chef_ingredient 'chef-compliance' do
+      chef_ingredient 'compliance' do
         action :uninstall
       end
     end
@@ -115,9 +115,14 @@ module MarketplaceImageCookbook
     def prepare_machine
       include_recipe 'yum-centos::default'
 
-      # Blow away old config to trigger security recipe cause we're gonna golden
-      # image like it's 1999
-      file '/etc/chef-marketplace/chef-marketplace-running.json' do
+      # Always blow away the marketplace config when we start if we're publishing
+      file '/etc/chef-marketplace/marketplace.rb' do
+        action :delete
+        only_if { new_resource.publish }
+      end
+
+      # Remove the preconfigured sentinel file
+      file '/var/opt/chef-marketplace/preconfigured' do
         action :delete
         only_if { new_resource.publish }
       end
@@ -138,12 +143,14 @@ module MarketplaceImageCookbook
       config << "role '#{new_resource.role}'"
       config << "platform '#{new_resource.platform}'"
       config << "user '#{new_resource.default_user}'"
-      config << "support['email'] = '#{new_resource.support_email}'"
-      config << "documentation['url'] = '#{new_resource.doc_url}'"
-      config << "reporting['cron']['enabled'] = #{new_resource.reporting_cron}"
-      config << "publishing['enabled'] = #{new_resource.publish}"
-      config << "diasable_outboud_traffic #{new_resource.disable_outbound_traffic}"
+      config << "support.email = '#{new_resource.support_email}'"
+      config << "documentation.url = '#{new_resource.doc_url}'"
+      config << "reporting.cron.enabled = #{new_resource.reporting_cron}"
+      config << "disable_outboud_traffic #{new_resource.disable_outbound_traffic}"
       config << "license_count #{new_resource.license_count.to_i}"
+      config << "license_type '#{new_resource.license_type}'"
+      config << 'reckoner.enabled = true' if new_resource.license_type == 'flexible'
+      config << "reckoner.product_code = '#{new_resource.product_code}'"
       config << new_resource.marketplace_config
       config.join("\n")
     end
@@ -153,6 +160,10 @@ module MarketplaceImageCookbook
       config << "topology 'chef-marketplace'"
       config << new_resource.server_config
       config.join("\n")
+    end
+
+    def compliance_config
+      new_resource.compliance_config
     end
 
     def manage_config
