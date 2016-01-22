@@ -41,7 +41,7 @@ end
 
 # Create the images
 gce_images.each do |image|
-  marketplace_gce image['name'] do
+  marketplace_image_gce image['name'] do
     snapshot             true
     destroy_after        true
     gce_credentials_file node['gce']['credentials_file']
