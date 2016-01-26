@@ -28,6 +28,7 @@ role = product.split('_').last
 license_type = product =~ /flexible/ ? 'flexible' : 'fixed'
 disable_outbound_traffic = marketplace =~ /ic/ ? true : false
 ami_id = node['marketplace_image']['aws'][marketplace][product]['ami']
+free_node_count = license_type == 'flexible' && product =~ /aio|server/ ? 5 : 0
 
 # Add a unique name to each product
 aws_images = node['marketplace_image']['aws'][marketplace][product]['products'].to_a.each_with_object([]) do |item, memo|
@@ -60,7 +61,8 @@ aws_images.each do |image|
     attribute %w(marketplace_image license_count), image['node_count']
     attribute %w(marketplace_image product_code), image['product_code']
     attribute %w(marketplace_image license_type), license_type
-    attribute %w(marketplace_image disable_outboud_traffic), disable_outbound_traffic
+    attribute %w(marketplace_image free_node_count), free_node_count
+    attribute %w(marketplace_image disable_outbound_traffic), disable_outbound_traffic
     attribute %w(marketplace_image doc_url), node['marketplace_image']['aws'][role]['doc_url']
   end
 end
