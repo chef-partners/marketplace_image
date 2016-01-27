@@ -1,0 +1,97 @@
+{
+  "partnerId": "chef-public",
+  "solutionId": "TBD from GCE",
+  "iconId": "gce-chef",
+  "marketingInfo": {
+    "name": "<%= @listing_name %>",
+    "version": "<%= @version %>"
+    "description": "<%= @description %>",
+    "categoryIds": "TBD from partner API",
+    "url": "https://www.chef.io/solutions/google-cloud-platform/",
+    "tagline": "automate your application deployments",
+    "supportInfo": "HTML with support info",
+    "supportUrl": "https://docs.chef.io/gce_marketplace.html",
+    "eulaUrl": "https://www.chef.io/online-master-agreement/",
+    "documentations": [
+      {
+        "url": "http://www.learnchef.com/",
+        "title": "Learn the Chef Basics",
+        "description": ""
+      },
+      {
+        "url": "https://docs.chef.io/gce_marketplace.html",
+        "title": "Troubleshooting",
+        "description": "Technical and Troubleshooting Documentation for GCE Chef Images"
+      },
+      {
+        "url": "https://docs.chef.io/gce_marketplace.html#move-to-gce",
+        "title": "Migrating to GCE",
+        "description": "How to migrate from your in-house Chef server to a GCE Chef server"
+      },
+    ],
+    "packagedSoftwareGroups": [
+      {
+        "type": "SOFTWARE_GROUP_OS",
+        "components": [
+          {
+            "name": "CentOS",
+            "version": "7.2"
+          }
+        ]
+      },
+      {
+        "components": [
+          {
+            "name": "Chef Server",
+            "version": "12.3.1
+            "
+          },
+          {
+            "name": "Chef Reporting",
+            "version": "1.5.6"
+          },
+          {
+            "name": "Chef Manage",
+            "version": "2.1.2"
+          },
+          {
+            "name": "Chef Analytics",
+            "version": "1.2.0"
+          }
+        ]
+      }
+    ]
+  },
+  "deploymentConfiguration": {
+    "@type": "type.googleapis.com/google.cloud.marketplace.common.v1test.GceDeploymentConfiguration",
+    "name": "<%= @image_name %>",
+    "projectId": "chef-public",
+    "applications": [
+      {
+        "name": "Chef",
+        "gettingStartedUrl": "https://docs.chef.io/gce_marketplace.html"
+        "firewallRules": [
+          {
+            "name": "chef-server-inbound",
+            "allowedRules": [
+              {
+                "ipProtocol": "tcp",
+                "portRanges": [
+                  "22",
+                  "80",
+                  "443",
+                  "8443"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "defaultDeploymentType": "SINGLE_VM",
+    "defaultConfiguration": {
+      "defaultMachineType": "n1-standard-2"
+    }
+  },
+  "accountManagementInfo": {}
+}

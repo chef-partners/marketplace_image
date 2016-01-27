@@ -32,6 +32,7 @@ license_type = product =~ /flexible/ ? 'flexible' : 'fixed'
 image_id = node['marketplace_image']['gce'][marketplace][product]['image_id']
 gce_project = 'chef-partners-test'
 gce_bucket = 'chef-partners-test-images'
+release_version = node['marketplace_image']['release_version']
 
 # Add a unique name to each product
 gce_images = node['marketplace_image']['gce'][marketplace][product]['products'].to_a.each_with_object([]) do |item, memo|
@@ -41,16 +42,10 @@ gce_images = node['marketplace_image']['gce'][marketplace][product]['products'].
   memo << item
 end
 
-manifest = {
-  time: time,
-  marketplace: marketplace,
-  product: product,
-  role: role,
-  license_type: license_type,
-  project: gce_project,
-  bucket: gce_bucket,
-  images: {}
-}
+output_dir = File.expand_path(File.join('~', 'gce_image_metadata'))
+directory output_dir do
+  action :create
+end
 
 gce_images.each do |image|
   node_attributes = {
@@ -82,12 +77,14 @@ gce_images.each do |image|
     node_attributes        node_attributes
   end
 
-  # will likely need more info in here in the future, hence setting up the value
-  # as a hash, even though there's only one key in it for now.
-  manifest[:images][image['name']] = { license_count: image['node_count'] }
-end
-
-file File.expand_path(File.join('~', "gce_#{marketplace}_#{product}_manifest.json")) do
-  content Chef::JSONCompat.to_json_pretty(manifest)
-  action :create
+  template File.join(output_dir, "chef-#{role}-#{image['node_count']}-#{release_version}.json") do
+    source gce_metadata_source(role)
+    variables(
+      listing_name: gce_listing_name(role, image['node_count']),
+      image_name:   image['name'],
+      description:  gce_listing_description(role, image['node_count']),
+      version:      release_version
+    )
+    action :create
+  end
 end

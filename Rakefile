@@ -14,8 +14,8 @@ def stop_chef_zero
 end
 
 def berks_install(hosted = false)
-  cmd = hosted ? 'USE_HOSTED=1 ' : ''
-  cmd << 'berks install && berks upload --force'
+  use_hosted = hosted ? 'USE_HOSTED=1 ' : ''
+  cmd = "#{use_hosted} berks install && #{use_hosted} berks upload --force"
   system(cmd)
 end
 
@@ -148,7 +148,7 @@ end
 
 # Google
 desc 'Publish GCE Marketplace Images'
-task :publish_gce, :marketplace, :product do |_, params|
+task :publish_gce, :marketplace, :product, :release_version do |_, params|
   begin
     write_client_json('marketplace_image' => params.to_h, 'gce' => gce_config)
     start_chef_zero
@@ -163,8 +163,9 @@ task :publish_gce, :marketplace, :product do |_, params|
 end
 
 desc 'Build GCE AIO images for the public marketplace'
-task :publish_gce_aio_public do
-  Rake::Task['publish_gce'].invoke('public', 'aio')
+task :publish_gce_aio_public, :version do |_, params|
+  params.with_defaults(version: '0.0.1')
+  Rake::Task['publish_gce'].invoke('public', 'aio', params[:version])
 end
 
 # Rubocop
