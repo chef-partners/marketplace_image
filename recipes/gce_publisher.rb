@@ -30,6 +30,8 @@ product = node['marketplace_image']['product']
 role = product.split('_').last
 license_type = product =~ /flexible/ ? 'flexible' : 'fixed'
 image_id = node['marketplace_image']['gce'][marketplace][product]['image_id']
+gce_project = 'chef-partners-test'
+gce_bucket = 'chef-partners-test-images'
 
 # Add a unique name to each product
 gce_images = node['marketplace_image']['gce'][marketplace][product]['products'].to_a.each_with_object([]) do |item, memo|
@@ -38,6 +40,17 @@ gce_images = node['marketplace_image']['gce'][marketplace][product]['products'].
   item['name'] << "-#{time}"
   memo << item
 end
+
+manifest = {
+  time: time,
+  marketplace: marketplace,
+  product: product,
+  role: role,
+  license_type: license_type,
+  project: gce_project,
+  bucket: gce_bucket,
+  images: {}
+}
 
 gce_images.each do |image|
   node_attributes = {
@@ -49,14 +62,15 @@ gce_images.each do |image|
       'license_type'      => license_type,
       'support_email'     => node['marketplace_image']['gce'][role]['support_email'],
       'doc_url'           => node['marketplace_image']['gce'][role]['doc_url'],
-      'publishing_bucket' => 'chef-partners-test-images'
+      'publishing_bucket' => gce_bucket,
+      'publish'           => true
     }
   }
 
   marketplace_image_gce image['name'] do
     destroy_after          true
     gce_credentials_file   node['gce']['credentials_file']
-    project                'chef-partners-test'
+    project                gce_project
     chef_server_url        node['gce']['chef_server']
     validation_client_name node['gce']['validation_client_name']
     validation_key         node['gce']['validation_key']
@@ -67,4 +81,13 @@ gce_images.each do |image|
     run_list               ['marketplace_gce::bootstrap', 'marketplace_image::_publisher', 'marketplace_gce::create_snapshot']
     node_attributes        node_attributes
   end
+
+  # will likely need more info in here in the future, hence setting up the value
+  # as a hash, even though there's only one key in it for now.
+  manifest[:images][image['name']] = { license_count: image['node_count'] }
+end
+
+file File.expand_path(File.join('~', "gce_#{marketplace}_#{product}_manifest.json")) do
+  content Chef::JSONCompat.to_json_pretty(manifest)
+  action :create
 end
