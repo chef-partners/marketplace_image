@@ -28,4 +28,5 @@ marketplace_image node['marketplace_image']['role'] do
   license_type              node['marketplace_image']['license_type']
   doc_url                   node['marketplace_image']['doc_url']
   product_code              node['marketplace_image']['product_code']
+  free_node_count           node['marketplace_image']['free_node_count']
 end

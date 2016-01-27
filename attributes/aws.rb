@@ -9,7 +9,7 @@ default['marketplace_image']['aws']['public']['aio']['products'] = [
   { 'node_count' => 250, 'product_code' => 'cfnnw6j8s75mhj3i5na0t4afq' }
 ]
 
-default['marketplace_image']['aws']['public']['flexible_aio']['ami'] = 'ami-2574554f'
+default['marketplace_image']['aws']['public']['flexible_aio']['ami'] = 'ami-304e6d5a'
 default['marketplace_image']['aws']['public']['flexible_aio']['products'] = [
   { 'node_count' => 0, 'product_code' => 'dlna41ywkqax795eganhflsm8' }
 ]
@@ -25,14 +25,14 @@ default['marketplace_image']['aws']['public']['compliance']['products'] = [
   { 'node_count' => 250, 'product_code' => 'ezw9hgu9mtlvqwkayp5gw15is' }
 ]
 
-default['marketplace_image']['aws']['public']['flexible_compliance']['ami'] = 'ami-857352ef'
+default['marketplace_image']['aws']['public']['flexible_compliance']['ami'] = 'ami-db4c6fb1'
 default['marketplace_image']['aws']['public']['flexible_compliance']['products'] = [
   { 'node_count' => 0, 'product_code' => '8a3w64phkkutljzrbdqjrmc8f' }
 ]
 
-default['marketplace_image']['aws']['ic']['aio']['ami'] = 'ami-1e2c0a74'
+default['marketplace_image']['aws']['ic']['aio']['ami'] = 'ami-304e6d5a'
 default['marketplace_image']['aws']['ic']['aio']['products'] = [
-  { 'node_count' => 5, 'product_code' => 'dzsysio0zch27uban3y1c6wh7' },
+  { 'node_count' => 5, 'product_code' => 'dgivcepn261oi5ul0fdxu6drf' },
   { 'node_count' => 25, 'product_code' => 'cntn7cg2u1iiwv0eah6fnkkbj' },
   { 'node_count' => 50, 'product_code' => 'ax4j22h69yeb5824i1qhobdaw' },
   { 'node_count' => 100, 'product_code' => 'dqbbw3v3mqcm5vvr8fdgrw0cy' },

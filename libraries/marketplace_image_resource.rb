@@ -39,9 +39,10 @@ class Chef
       attribute :publish, kind_of: [TrueClass, FalseClass], default: true
       attribute :disable_outbound_traffic, kind_of: [TrueClass, FalseClass], default: false
       attribute :license_type, kind_of: String, default: 'fixed'
+      attribute :license_count, kind_of: [String, Integer], default: 5
+      attribute :free_node_count, kind_of: [String, Integer], default: 0
 
       # Chef Server
-      attribute :license_count, kind_of: [String, Integer], default: 5
       attribute :server_config, kind_of: [String, NilClass], default: nil
       attribute :server_version, kind_of: [String, NilClass], default: 'latest'
 

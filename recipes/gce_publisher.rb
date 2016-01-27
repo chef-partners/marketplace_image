@@ -22,7 +22,7 @@ required_keys = %w(credentials_file chef_server validation_client_name validatio
 missing_keys = required_keys.each_with_object([]) do |item, memo|
   memo << item unless node['gce'].key?(item)
 end
-raise "The following parameters are missing from your gce_config.json: #{missing_keys.join(', ')}" unless missing_keys.empty?
+fail "The following parameters are missing from your gce_config.json: #{missing_keys.join(', ')}" unless missing_keys.empty?
 
 time = Time.now.strftime('%Y%m%d')
 marketplace = node['marketplace_image']['marketplace']
@@ -64,7 +64,7 @@ gce_images.each do |image|
     source_image_id        image_id
     ssh_username           node['gce']['ssh_username']
     ssh_key_file           node['gce']['ssh_key_file'] if node['gce']['ssh_key_file']
-    run_list               [ 'marketplace_gce::bootstrap', 'marketplace_image::_publisher', 'marketplace_gce::create_snapshot' ]
+    run_list               ['marketplace_gce::bootstrap', 'marketplace_image::_publisher', 'marketplace_gce::create_snapshot']
     node_attributes        node_attributes
   end
 end

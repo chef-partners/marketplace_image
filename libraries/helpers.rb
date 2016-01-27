@@ -25,7 +25,7 @@ module MarketplaceImageCookbook
       end
 
       ingredient_config 'chef-marketplace' do
-        notifies :reconfigure, 'chef_ingredient[chef-marketplace]'
+        notifies :reconfigure, 'chef_ingredient[chef-marketplace]', :immediately
       end
     end
 
@@ -115,12 +115,6 @@ module MarketplaceImageCookbook
     def prepare_machine
       include_recipe 'yum-centos::default'
 
-      # Always blow away the marketplace config when we start if we're publishing
-      file '/etc/chef-marketplace/marketplace.rb' do
-        action :delete
-        only_if { new_resource.publish }
-      end
-
       # Remove the preconfigured sentinel file
       file '/var/opt/chef-marketplace/preconfigured' do
         action :delete
@@ -146,9 +140,10 @@ module MarketplaceImageCookbook
       config << "support.email = '#{new_resource.support_email}'"
       config << "documentation.url = '#{new_resource.doc_url}'"
       config << "reporting.cron.enabled = #{new_resource.reporting_cron}"
-      config << "disable_outboud_traffic #{new_resource.disable_outbound_traffic}"
-      config << "license_count #{new_resource.license_count.to_i}"
-      config << "license_type '#{new_resource.license_type}'"
+      config << "disable_outbound_traffic #{new_resource.disable_outbound_traffic}"
+      config << "license.count #{new_resource.license_count.to_i}"
+      config << "license.type '#{new_resource.license_type}'"
+      config << "license.free_node_count = #{new_resource.free_node_count.to_i}"
       config << 'reckoner.enabled = true' if new_resource.license_type == 'flexible'
       config << "reckoner.product_code = '#{new_resource.product_code}'"
       config << new_resource.marketplace_config

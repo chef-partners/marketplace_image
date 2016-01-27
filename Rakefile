@@ -1,5 +1,7 @@
+require 'rake'
 require 'json'
 require 'tempfile'
+require 'rubocop/rake_task'
 
 def start_chef_zero
   @zero_pid = spawn('chef-zero -p 8899')
@@ -11,14 +13,11 @@ def stop_chef_zero
   Process.kill('HUP', @zero_pid)
 end
 
-def berks_install
-  system('berks install && berks upload')
+def berks_install(hosted = false)
+  cmd = hosted ? 'USE_HOSTED=1 ' : ''
+  cmd << 'berks install && berks upload --force'
+  system(cmd)
 end
-
-def hosted_berks_install
-  system('berks install && USE_HOSTED=1 berks upload && USE_HOSTED=1 berks upload marketplace_gce --force')
-end
-
 
 def write_client_json(params)
   @client_json_file = Tempfile.new('client.json')
@@ -42,16 +41,12 @@ end
 
 def gce_config
   gce_config_file = File.join(File.expand_path(File.dirname(__FILE__)), '.chef', 'gce_config.json')
-  raise "Please create a gce_config.json at #{gce_config_file}" unless File.exist?(gce_config_file)
+  fail "Please create a gce_config.json at #{gce_config_file}" unless File.exist?(gce_config_file)
 
   JSON.load(File.read(gce_config_file))
 end
 
-########################
-#
 # Amazon
-#
-
 desc 'Publish AWS Marketplace Images'
 task :publish_aws, :marketplace, :product do |_, params|
   begin
@@ -151,18 +146,14 @@ task :publish_aws_analytics do
   stop_chef_zero
 end
 
-########################
-#
 # Google
-#
-
 desc 'Publish GCE Marketplace Images'
 task :publish_gce, :marketplace, :product do |_, params|
   begin
     write_client_json('marketplace_image' => params.to_h, 'gce' => gce_config)
     start_chef_zero
     berks_install
-    hosted_berks_install
+    berks_install(true)
     system("chef-client -c .chef/client.rb -o 'marketplace_image::gce_publisher' -j #{@client_json_file.path} -l info")
   ensure
     delete_client_json
@@ -175,3 +166,12 @@ desc 'Build GCE AIO images for the public marketplace'
 task :publish_gce_aio_public do
   Rake::Task['publish_gce'].invoke('public', 'aio')
 end
+
+# Rubocop
+desc 'Run Rubocop style checks'
+RuboCop::RakeTask.new do |cop|
+  cop.fail_on_error = true
+end
+
+desc 'Default task: rubocop'
+task default: %w(rubocop)
