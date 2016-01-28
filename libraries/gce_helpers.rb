@@ -33,7 +33,7 @@ module MarketplaceImageCookbook
       when 'compliance'
         'Chef Compliance'
       else
-        raise "Unknown role: #{role}"
+        fail "Unknown role: #{role}"
       end
     end
 
@@ -46,12 +46,11 @@ module MarketplaceImageCookbook
       when 'aio', 'server'
         description = 'The Chef Server image helps you launch a Chef Server in minutes with 1-Click, hourly billing and support from Chef Software.  It comes preinstalled Chef Server, Analytics, Management Console, and Reporting'
 
-        if license_count == 5
-          description += '.  This image is free of software charge and licensed for 5 nodes.'
-        else
-          description += " and is licensed for #{license_count} nodes."
-        end
-
+        description += if license_count == 5
+                         '.  This image is free of software charge and licensed for 5 nodes.'
+                       else
+                         " and is licensed for #{license_count} nodes."
+                       end
       when 'compliance'
         description = 'The Chef Compliance server delivers true compliance to your infrastructure by scanning for risks and compliance issues with customizable reports and visualization, automated remediation, and continuous audit for applications and infrastructure. '
       end
