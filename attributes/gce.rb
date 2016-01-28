@@ -1,9 +1,9 @@
-default['marketplace_image']['gce']['public']['aio']['image_id'] = 'centos-7-v20160119'
+default['marketplace_image']['gce']['public']['aio']['image_id'] = 'centos-7-v20160126'
 default['marketplace_image']['gce']['public']['aio']['products'] = [
   { 'node_count' => 5 }
 ]
 
-default['marketplace_image']['gce']['public']['compliance']['image_id'] = 'centos-7-v20160119'
+default['marketplace_image']['gce']['public']['compliance']['image_id'] = 'centos-7-v20160126'
 default['marketplace_image']['gce']['public']['compliance']['products'] = [
   { 'node_count' => 5 }
 ]
