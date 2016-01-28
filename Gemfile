@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'berkshelf'
+gem 'berkshelf', '>= 4'
 gem 'thor-foodcritic'
 gem 'test-kitchen'
 gem 'kitchen-vagrant'
