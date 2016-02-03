@@ -5,64 +5,193 @@ provisioner:
   chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
 
 platforms:
-  - name: aws-centos-6.6
-    driver_plugin: ec2
-    driver_config:
-      image_id: ami-45f9872f
-      transport:
-        username: ec2-user
-        ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
-      instance_type: m4.xlarge
-      associate_public_ip: true
-      aws_ssh_key_id: marketplace_builder
-      security_groups: marketplace_builder
-      region: us-east-1
-    transport:
-      username: ec2-user
-      ssh_key: <%= ENV['MARKETPLACE_BUILDER_SSH_KEY_PATH'] %>
-    attributes:
-      test:
-        platform: aws
-        default_user: ec2-user
-        support_email: aws@chef.io
-
-  - name: vagrant-centos-6.6
+  - name: publish
     driver_plugin: vagrant
     driver_config:
-      box: opscode-centos-6.6
-      network:
-        - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
-        - ["forwarded_port", {guest: 443, host: 8443, auto_correct: true}]
+      box: opscode-ubuntu-14.04
       customize:
         cpus: 2
         memory: 4096
 
 suites:
-  - name: chef_server
-    run_list: test::default
-    attributes:
-      test:
-        role: server
-  - name: analytics
-    run_list: test::default
-    attributes:
-      test:
-        role: analytics
-  - name: compliance
-    run_list: test::default
-    attributes:
-      test:
-        role: compliance
-  - name: aws_compliance_seed
-    run_list: "marketplace_image::_publisher"
+  - name: azure_compliance
+    run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
-        platform: aws
-        default_user: ec2-user
-        role: compliance
-  - name: aws_aio_seed
-    run_list: "marketplace_image::_publisher"
+        azure:
+          compliance:
+            enabled: true
+  - name: azure_aio
+    run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
-        platform: aws
-        default_user: ec2-user
+        azure:
+          aio:
+            enabled: true
+  - name: azure_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        azure:
+          aio:
+            enabled: true
+          compliance:
+            enabled: true
+  - name: gce_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        gce:
+          compliance:
+            enabled: true
+  - name: gce_aio
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        gce:
+          aio:
+            enabled: true
+  - name: gce_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        gce:
+          aio:
+            enabled: true
+          compliance:
+            enabled: true
+
+  - name: aws_public_aio
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              enabled: true
+  - name: aws_public_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            compliance:
+              enabled: true
+  - name: aws_public_flexible_aio
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              fcp_enabled: true
+  - name: aws_public_flexible_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            compliance:
+              fcp_enabled: true
+  - name: aws_public_flexible_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              fcp_enabled: true
+            compliance:
+              fcp_enabled: true
+  - name: aws_public_fixed_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              enabled: true
+            compliance:
+              enabled: true
+  - name: aws_public_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              enabled: true
+              fcp_enabled: true
+            compliance:
+              enabled: true
+              fcp_enabled: true
+  - name: aws_ic_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          ic:
+            compliance:
+              enabled: true
+  - name: aws_ic_aio
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          ic:
+            aio:
+              enabled: true
+  - name: aws_ic_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          ic:
+            aio:
+              enabled: true
+            compliance:
+              enabled: true
+  - name: aws_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              enabled: true
+              fcp_enabled: true
+            compliance:
+              enabled: true
+              fcp_enabled: true
+          ic:
+            aio:
+              enabled: true
+            compliance:
+              enabled: true
+  - name: all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public:
+            aio:
+              enabled: true
+              fcp_enabled: true
+            compliance:
+              enabled: true
+              fcp_enabled: true
+          ic:
+            aio:
+              enabled: true
+            compliance:
+              enabled: true
+        azure:
+          aio:
+            enabled: true
+          compliance:
+            enabled: true
+        gce:
+          aio:
+            enabled: true
+          compliance:
+            enabled: true

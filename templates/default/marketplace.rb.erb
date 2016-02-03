@@ -1,0 +1,13 @@
+role '<%= @role %>'
+platform '<%= @platform %>'
+user '<%= @user %>'
+support.email = '<%= @support_email %>'
+documentation.url = '<%= @doc_url %>'
+reporting.cron.enabled = <%= @reporting_cron_enabled %>
+disable_outbound_traffic <%= @disable_outbound_traffic %>
+license.count <%= @license_count %>
+license.type '<%= @license_type %>'
+license.free_node_count = <%= @free_node_count %>
+<% if @product_code %>
+reckoner.product_code = '<%= @product_code %>'
+<% end %>

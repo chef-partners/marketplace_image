@@ -1,11 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'berkshelf', '>= 4'
-gem 'thor-foodcritic'
 gem 'test-kitchen'
 gem 'kitchen-vagrant'
 gem 'rubocop'
 gem 'rake'
-gem 'chef-provisioning-aws'
 gem 'chef'
-gem 'chefspec'

@@ -7,10 +7,14 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Max: 200
 Metrics/AbcSize:
-  Max: 50
+  Enabled: false
 Style/GuardClause:
   Enabled: false
-Style/SingleSpaceBeforeFirstArg:
+Style/CyclomaticComplexity:
+  Enabled: false
+Style/PerceivedComplexity:
+  Enabled: false
+Style/SpaceBeforeFirstArg:
   Enabled: false
 Documentation:
   Enabled: false

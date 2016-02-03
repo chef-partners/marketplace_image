@@ -1,0 +1,6 @@
+#!/bin/bash
+
+curl -s https://packagecloud.io/install/repositories/chef/stable/script.rpm.sh | sudo bash
+sudo yum update
+sudo yum upgrade -y
+sudo yum install chef-marketplace -y

@@ -22,3 +22,7 @@ bin/*
 .chef/local-mode-cache/
 .chef/gce_config.json
 .chef/hosted.pem
+chef-marketplace.deb
+chef-marketplace.rpm
+
+data_bags/*
