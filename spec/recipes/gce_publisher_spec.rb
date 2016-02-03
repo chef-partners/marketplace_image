@@ -24,6 +24,10 @@ describe 'marketplace_image::gce_publisher' do
     end.converge(described_recipe)
   end
 
+  it 'force rspec fail' do
+    expect(1).to eq(2)
+  end
+
   it 'creates a GCE image for each configured product' do
     time = Time.now.strftime('%Y%m%d')
     expect(chef_run).to create_marketplace_image_gce("chef-aio-testmarketplace-5-#{time}")
