@@ -8,9 +8,9 @@ Ubuntu 14.04
 
 ## Supported Marketplaces
 
-AWS
-Azure
-Google Compute
+* AWS
+* Azure
+* Google Compute
 
 ## Configuration
 
@@ -85,7 +85,7 @@ credentials, ie:
       "type": "service_account",
       "project_id": "XXXXXXXXXXXXX",
       "private_key_id": "XXXXXXXXXXXXXXXXX",
-      "private_key": "-----BEGIN PRIVATE KEY-----\XXXXXXXXXXXXXXXXXXXXXXXXX=\n-----END PRIVATE KEY-----\n",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nXXXXXXXXXXXXXXXXXXXXXXXXX=\n-----END PRIVATE KEY-----\n",
       "client_email": "foo@XXXXX.iam.gserviceaccount.com",
       "client_id": "XXXXXXXXXXXXXXXXXXXXX",
       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
