@@ -62,6 +62,45 @@ definitions are essentially hashes that conform to the following standard:
 }
 ```
 
+The packer builders also need to be configured.  Currently this is done via a
+data_bag.  If you wish to run these builders you'll need to create a `data_bags/marketplace_image`
+directory and populate it with a `publishing_credentials.json` file with the cloud specific
+credentials, ie:
+
+```json
+{
+  "id": "publishing_credentials",
+  "azure": {
+    "publish_settings": {
+      "schema_version": "2.0",
+      "publish_method": "AzureServiceManagementAPI",
+      "service_management_url": "https://management.core.windows.net",
+      "subscription_id": "1XXXXXX-XXXX-XXXX-XXXXXXXXXX",
+      "subscription_name": "Partner Engineering",
+      "management_certificate": "MIIKDAIXXXXXXX....."
+    }
+  },
+  "gce": {
+    "account": {
+      "type": "service_account",
+      "project_id": "XXXXXXXXXXXXX",
+      "private_key_id": "XXXXXXXXXXXXXXXXX",
+      "private_key": "-----BEGIN PRIVATE KEY-----\XXXXXXXXXXXXXXXXXXXXXXXXX=\n-----END PRIVATE KEY-----\n",
+      "client_email": "foo@XXXXX.iam.gserviceaccount.com",
+      "client_id": "XXXXXXXXXXXXXXXXXXXXX",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://accounts.google.com/o/oauth2/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/XXXXXXXXXXXXXXXXXXXX.iam.gserviceaccount.com"
+    }
+  },
+  "aws": {
+    "secret_access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "secret_key_id": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  }
+}
+```
+
 ## Publishing
 
 Run the kitchen suite for the products that you wish to build, eg:
