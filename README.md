@@ -4,107 +4,70 @@ A cookbook for building and publishing images to various cloud marketplaces
 
 ## Supported Platforms
 
-CentOS
+Ubuntu 14.04
 
 ## Supported Marketplaces
 
 AWS
+Azure
+Google Compute
 
-## Attributes
+## Configuration
 
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['platform']</tt></td>
-    <td>String</td>
-    <td>The cloud platform to run on</td>
-    <td><tt>aws</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['role']</tt></td>
-    <td>String</td>
-    <td>Which role to build</td>
-    <td><tt>server</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['chef_server_version']</tt></td>
-    <td>String</td>
-    <td>Which version of the Chef server package to install</td>
-    <td><tt>latest</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['reporting_version']</tt></td>
-    <td>String</td>
-    <td>Which version of the Opscode Reporting package to install</td>
-    <td><tt>latest</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['manage_version']</tt></td>
-    <td>String</td>
-    <td>Which version of the Chef Manage package to install</td>
-    <td><tt>latest</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['analytics_version']</tt></td>
-    <td>String</td>
-    <td>Which version of the Chef Analytics package to install</td>
-    <td><tt>latest</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['analytics_version']</tt></td>
-    <td>String</td>
-    <td>The license count for the Chef server</td>
-    <td><tt>5</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['support_email']</tt></td>
-    <td>String</td>
-    <td>Unique email for support requests</td>
-    <td><tt>aws@chef.io</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['aws']['origin_ami']</tt></td>
-    <td>String</td>
-    <td>The base AMI to build on top of</td>
-    <td><tt>ami-d9e61db2</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['marketplace_image']['aws']['server_products']</tt></td>
-    <td>Array<Hash></td>
-    <td>An Array of Server products hashes</td>
-    <td><tt>[{'node_count' => 5, 'product_code' => 'dzsysio0zch27uban3y1c6wh7'}]</tt></td>
-  </tr>
-</table>
+The `marketplace_image` cookbook is an attribute driven cookbook that iterates
+over "builder definitions" that are configured via attributes.  Builder
+definitions are essentially hashes that conform to the following standard:
 
-## Usage
+```ruby
+{
+  'name' => "unique_builder_name_as_a_string",
+  'builder_options' => {
+    'key' => 'value',
+    'pairs' => 'specific'
+    'to' => 'the',
+    'packer' => 'driver'
+  },
+  'marketplace_config_options' => {
+    'key' => 'value',
+    'pairs' => 'specific'
+    'to' => 'the',
+    'marketplace' => 'images',
+    'desired' => 'config'
+  }
+}
 
-Set the path to the marketplace_builder ssh key in your environment
+# Example:
 
-```shell
-export MARKETPLACE_BUILDER_SSH_KEY_PATH=~/.ssh/marketplace_builder.pem
+{
+  'name' => "gce_example",
+  'builder_options' => {
+    'type' => 'googlecompute',
+    'account_file' => node['marketplace_image']['gce']['account_file'],
+    'project_id' => 'chef-marketplace-dev',
+    'source_image' => 'centos-7-v20160126',
+    'zone' => 'us-central1-a',
+    'ssh_username' => 'marketplace'
+  },
+  'marketplace_config_options' => {
+    'role' => 'aio',
+    'platform' => 'gce',
+    'support_email' => 'cloud-marketplaces@chef.io',
+    'reporting_cron_enabled' => true,
+    'doc_url' => 'https://docs.chef.io/google_marketplace.html',
+    'disable_outbound_traffic' => false,
+    'license_count' => 25,
+    'license_type' => 'fixed',
+    'free_node_count' => 5
+  }
+}
 ```
 
-### Testing
+## Publishing
 
-Run the kitchen suite for the platform and role you want to test
-
-```shell
-kitchen test chef-server-aws-centos-66
-kitchen test analytics-aws-centos-66
-```
-
-### Publishing
-
-run build rake task for the platform and role you want to test
+Run the kitchen suite for the products that you wish to build, eg:
 
 ```shell
-bundle exec rake publish_aws_analytics
-bundle exec rake publish_aws_server
+kitchen converge aws-all-publish
 ```
 
 ## License and Authors

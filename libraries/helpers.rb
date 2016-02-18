@@ -1,6 +1,6 @@
 #
 # Author:: Partner Engineering <partnereng@chef.io>
-# Copyright (c) 2015, Chef Software, Inc. <legal@chef.io>
+# Copyright (c) 2016, Chef Software, Inc. <legal@chef.io>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,155 +17,101 @@
 
 module MarketplaceImageCookbook
   module Helpers
-    def install_marketplace
-      chef_ingredient 'chef-marketplace' do
-        version new_resource.marketplace_version
-        config marketplace_config
-        action :upgrade
-      end
-
-      ingredient_config 'chef-marketplace' do
-        notifies :reconfigure, 'chef_ingredient[chef-marketplace]', :immediately
-      end
+    def marketplace_products
+      aws_products + azure_products + gce_products
     end
 
-    def install_server
-      chef_ingredient 'chef-server' do
-        config server_config
-        version new_resource.server_version
-        action :upgrade
-      end
-
-      ingredient_config 'chef-server'
-
-      chef_ingredient 'reporting' do
-        config new_resource.reporting_config
-        version new_resource.reporting_version
-        action :upgrade
-      end
-
-      ingredient_config 'reporting'
-
-      chef_ingredient 'manage' do
-        config manage_config
-        version new_resource.manage_version
-        action :upgrade
-      end
-
-      ingredient_config 'manage'
+    def enabled_products
+      enabled_aws_products + enabled_azure_products + enabled_gce_products
     end
 
-    def install_analytics
-      chef_ingredient 'analytics' do
-        config new_resource.analytics_config
-        version new_resource.analytics_version
-        action :upgrade
-      end
-
-      ingredient_config 'analytics'
+    def enabled_builders
+      enabled_products.map { |p| p['name'] }
     end
 
-    def install_compliance
-      chef_ingredient 'compliance' do
-        config compliance_config
-        version new_resource.compliance_version
-        action :upgrade
-      end
-
-      ingredient_config 'compliance'
+    def aws_products
+      node['marketplace_image']['aws']['public']['aio']['products'] +
+        node['marketplace_image']['aws']['public']['compliance']['products'] +
+        node['marketplace_image']['aws']['ic']['aio']['products'] +
+        node['marketplace_image']['aws']['ic']['compliance']['products'] +
+        [
+          node['marketplace_image']['aws']['public']['aio']['fcp'],
+          node['marketplace_image']['aws']['public']['compliance']['fcp']
+        ]
     end
 
-    def install_aio
-      install_server
-      install_analytics
+    def enabled_aws_builders
+      enabled_aws_products.map { |p| p['name'] }
     end
 
-    def uninstall_server
-      chef_ingredient 'chef-server' do
-        action :uninstall
-      end
-
-      chef_ingredient 'reporting' do
-        action :uninstall
-      end
-
-      chef_ingredient 'manage' do
-        action :uninstall
-      end
+    def aws_builders
+      aws_products.map { |p| p['name'] }
     end
 
-    def uninstall_marketplace
-      chef_ingredient 'chef-marketplace' do
-        action :uninstall
-      end
+    def enabled_aws_products
+      products = []
+      products += node['marketplace_image']['aws']['public']['aio']['products'] if
+        node['marketplace_image']['aws']['public']['aio']['enabled']
+      products += node['marketplace_image']['aws']['public']['compliance']['products'] if
+        node['marketplace_image']['aws']['public']['compliance']['enabled']
+      products += node['marketplace_image']['aws']['ic']['aio']['products'] if
+        node['marketplace_image']['aws']['ic']['aio']['enabled']
+      products += node['marketplace_image']['aws']['ic']['compliance']['products'] if
+        node['marketplace_image']['aws']['ic']['compliance']['enabled']
+      products << node['marketplace_image']['aws']['public']['aio']['fcp'] if
+        node['marketplace_image']['aws']['public']['aio']['fcp_enabled']
+      products << node['marketplace_image']['aws']['public']['compliance']['fcp'] if
+        node['marketplace_image']['aws']['public']['compliance']['fcp_enabled']
+      products
     end
 
-    def uninstall_analytics
-      chef_ingredient 'analytics' do
-        action :uninstall
-      end
+    def azure_products
+      node['marketplace_image']['azure']['aio']['products'] +
+        node['marketplace_image']['azure']['compliance']['products']
     end
 
-    def uninstall_compliance
-      chef_ingredient 'compliance' do
-        action :uninstall
-      end
+    def enabled_azure_products
+      products = []
+      products += node['marketplace_image']['azure']['aio']['products'] if
+        node['marketplace_image']['azure']['aio']['enabled']
+      products += node['marketplace_image']['azure']['compliance']['products'] if
+        node['marketplace_image']['azure']['compliance']['enabled']
+      products
     end
 
-    def prepare_machine
-      include_recipe 'yum-centos::default'
-
-      # Remove the preconfigured sentinel file
-      file '/var/opt/chef-marketplace/preconfigured' do
-        action :delete
-        only_if { new_resource.publish }
-      end
-
-      # This might be around from older omnibus-marketplace installs
-      link '/opt/chef-marketplace/chef-server-plugin.rb' do
-        to '/var/opt/opscode/plugins/chef-marketplace.rb'
-        action :delete
-        ignore_failure true
-      end
-
-      # Update!
-      execute 'yum update -y'
+    def enabled_azure_builders
+      enabled_azure_products.map { |p| p['name'] }
     end
 
-    def marketplace_config
-      config = []
-      config << "role '#{new_resource.role}'"
-      config << "platform '#{new_resource.platform}'"
-      config << "user '#{new_resource.default_user}'"
-      config << "support.email = '#{new_resource.support_email}'"
-      config << "documentation.url = '#{new_resource.doc_url}'"
-      config << "reporting.cron.enabled = #{new_resource.reporting_cron}"
-      config << "disable_outbound_traffic #{new_resource.disable_outbound_traffic}"
-      config << "license.count #{new_resource.license_count.to_i}"
-      config << "license.type '#{new_resource.license_type}'"
-      config << "license.free_node_count = #{new_resource.free_node_count.to_i}"
-      config << 'reckoner.enabled = true' if new_resource.license_type == 'flexible'
-      config << "reckoner.product_code = '#{new_resource.product_code}'"
-      config << new_resource.marketplace_config
-      config.join("\n")
+    def azure_builders
+      azure_products.map { |p| p['name'] }
     end
 
-    def server_config
-      config = []
-      config << "topology 'chef-marketplace'"
-      config << new_resource.server_config
-      config.join("\n")
+    def gce_products
+      node['marketplace_image']['gce']['aio']['products'] +
+        node['marketplace_image']['gce']['compliance']['products']
     end
 
-    def compliance_config
-      new_resource.compliance_config
+    def enabled_gce_products
+      products = []
+      products += node['marketplace_image']['gce']['aio']['products'] if
+        node['marketplace_image']['gce']['aio']['enabled']
+      products += node['marketplace_image']['gce']['compliance']['products'] if
+        node['marketplace_image']['gce']['compliance']['enabled']
+      products
     end
 
-    def manage_config
-      config = []
-      config << 'disable_sign_up true'
-      config << new_resource.manage_config
-      config.join("\n")
+    def gce_builders
+      gce_products.map { |p| p['name'] }
+    end
+
+    def enabled_gce_builders
+      enabled_gce_products.map { |p| p['name'] }
     end
   end
 end
+
+Chef::Recipe.send(:include, MarketplaceImageCookbook::Helpers)
+Chef::Provider.send(:include, MarketplaceImageCookbook::Helpers)
+Chef::Resource.send(:include, MarketplaceImageCookbook::Helpers)
+Chef::ResourceDefinition.send(:include, MarketplaceImageCookbook::Helpers)
