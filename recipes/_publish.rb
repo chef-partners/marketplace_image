@@ -36,7 +36,7 @@ end
 
 packer_provisioner 'yum_upgrade' do
   type 'shell'
-  source 'apt_upgrade.sh.erb'
+  source 'yum_upgrade.sh.erb'
   except azure_builders
 end
 
@@ -45,9 +45,17 @@ packer_provisioner 'prepare_for_publishing' do
   source 'prepare_for_publishing.sh.erb'
 end
 
+# TODO: Remove these two provisioners after chef-marketplace 0.0.7 has been released
 packer_provisioner "echo 'ClientAliveInterval 180' | sudo tee -a /etc/ssh/sshd_config" do
   type 'shell'
   inline true
+  only azure_builders
+end
+
+packer_provisioner 'sudo mkdir -p /opt/chef-compliance/{sv,init,service}' do
+  type 'shell'
+  inline true
+  inline_shebang '/bin/bash'
   only azure_builders
 end
 

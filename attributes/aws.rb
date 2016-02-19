@@ -4,6 +4,8 @@ default['marketplace_image']['aws']['public']['compliance']['enabled'] = false
 default['marketplace_image']['aws']['public']['compliance']['fcp_enabled'] = false
 default['marketplace_image']['aws']['ic']['aio']['enabled'] = false
 default['marketplace_image']['aws']['ic']['compliance']['enabled'] = false
+default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-921a2bf8'
+default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-621f2e08'
 
 cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
@@ -27,9 +29,10 @@ default_marketplace_config = {
 aws_builder_config = {
   'type' => 'amazon-ebs',
   'region' => 'us-east-1',
-  'source_ami' => 'ami-356c465f',
+  'source_ami' => node['marketplace_image']['aws']['aio']['source_ami'],
   'instance_type' => 't2.large',
   'ssh_username' => 'ec2-user',
+  'ssh_pty' => 'true',
   'ami_name' => 'amazon'
 }
 
@@ -69,6 +72,7 @@ default['marketplace_image']['aws']['public']['compliance']['products'] =
     {
       'name' => "aws_public_compliance_#{node_count}",
       'builder_options' => aws_builder_config.merge(
+        'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
         'ami_name' => "aws_public_compliance_#{node_count}",
         'ami_product_codes' => [product_code]
       ),
@@ -117,6 +121,7 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
     {
       'name' => "aws_ic_compliance_#{node_count}",
       'builder_options' => aws_builder_config.merge(
+        'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
         'ami_name' => "aws_ic_compliance_#{node_count}",
         'ami_product_codes' => [product_code]
       ),
@@ -145,6 +150,7 @@ default['marketplace_image']['aws']['public']['compliance']['fcp'] =
   {
     'name' => 'aws_public_compliance_flexible',
     'builder_options' => aws_builder_config.merge(
+      'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
       'ami_product_codes' => ['8a3w64phkkutljzrbdqjrmc8f'],
       'ami_name' => 'aws_public_compliance_flexible'
     ),
