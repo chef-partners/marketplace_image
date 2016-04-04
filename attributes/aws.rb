@@ -4,11 +4,21 @@ default['marketplace_image']['aws']['public']['compliance']['enabled'] = false
 default['marketplace_image']['aws']['public']['compliance']['fcp_enabled'] = false
 default['marketplace_image']['aws']['ic']['aio']['enabled'] = false
 default['marketplace_image']['aws']['ic']['compliance']['enabled'] = false
-default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-921a2bf8'
-default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-621f2e08'
+default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-00f1f46a'
+default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-568d883c'
 
 cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
+
+@timestamp = Time.now.strftime('%Y_%m_%d_%H_%M_%S')
+@invalid_ami_name_characters = /[^\w\(\)\.\-\/]/
+
+def normalize_name(name)
+  # Append timestamp
+  # Remove invalid characters
+  # Ensure it's 128 characters or less
+  "#{name}_#{@timestamp}".gsub(@invalid_ami_name_characters, '').strip[0..127]
+end
 
 default['marketplace_image']['aws']['cred_dir'] = cred_dir
 default['marketplace_image']['aws']['credential_file'] = credential_file
@@ -30,7 +40,7 @@ aws_builder_config = {
   'type' => 'amazon-ebs',
   'region' => 'us-east-1',
   'source_ami' => node['marketplace_image']['aws']['aio']['source_ami'],
-  'instance_type' => 't2.large',
+  'instance_type' => 'm4.xlarge',
   'ssh_username' => 'ec2-user',
   'ssh_pty' => 'true',
   'ami_name' => 'amazon'
@@ -49,7 +59,7 @@ default['marketplace_image']['aws']['public']['aio']['products'] =
     {
       'name' => "aws_public_aio_#{node_count}",
       'builder_options' => aws_builder_config.merge(
-        'ami_name' => "aws_public_aio_#{node_count}",
+        'ami_name' => normalize_name("public_aio_#{node_count}"),
         'ami_product_codes' => [product_code]
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
@@ -73,7 +83,7 @@ default['marketplace_image']['aws']['public']['compliance']['products'] =
       'name' => "aws_public_compliance_#{node_count}",
       'builder_options' => aws_builder_config.merge(
         'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
-        'ami_name' => "aws_public_compliance_#{node_count}",
+        'ami_name' => normalize_name("public_compliance_#{node_count}"),
         'ami_product_codes' => [product_code]
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
@@ -97,7 +107,7 @@ default['marketplace_image']['aws']['ic']['aio']['products'] =
     {
       'name' => "aws_ic_aio_#{node_count}",
       'builder_options' => aws_builder_config.merge(
-        'ami_name' => "aws_ic_aio_#{node_count}",
+        'ami_name' => normalize_name("ic_aio_#{node_count}"),
         'ami_product_codes' => [product_code]
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
@@ -122,7 +132,7 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
       'name' => "aws_ic_compliance_#{node_count}",
       'builder_options' => aws_builder_config.merge(
         'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
-        'ami_name' => "aws_ic_compliance_#{node_count}",
+        'ami_name' => normalize_name("ic_compliance_#{node_count}"),
         'ami_product_codes' => [product_code]
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
@@ -139,7 +149,7 @@ default['marketplace_image']['aws']['public']['aio']['fcp'] =
     'name' => 'aws_public_aio_flexible',
     'builder_options' => aws_builder_config.merge(
       'ami_product_codes' => ['dlna41ywkqax795eganhflsm8'],
-      'ami_name' => 'aws_public_aio_flexible'
+      'ami_name' => normalize_name('public_aio_flexible')
     ),
     'marketplace_config_options' => default_marketplace_config.merge(
       'license_type' => 'flexible',
@@ -152,7 +162,7 @@ default['marketplace_image']['aws']['public']['compliance']['fcp'] =
     'builder_options' => aws_builder_config.merge(
       'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
       'ami_product_codes' => ['8a3w64phkkutljzrbdqjrmc8f'],
-      'ami_name' => 'aws_public_compliance_flexible'
+      'ami_name' => normalize_name('public_compliance_flexible')
     ),
     'marketplace_config_options' => default_marketplace_config.merge(
       'license_type' => 'flexible',

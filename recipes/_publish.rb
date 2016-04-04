@@ -28,12 +28,6 @@ packer_provisioner 'apt_upgrade' do
   only azure_builders
 end
 
-packer_provisioner 'sudo apt-get install walinuxagent -y' do
-  type 'shell'
-  inline true
-  only azure_builders
-end
-
 packer_provisioner 'yum_upgrade' do
   type 'shell'
   source 'yum_upgrade.sh.erb'
@@ -45,18 +39,16 @@ packer_provisioner 'prepare_for_publishing' do
   source 'prepare_for_publishing.sh.erb'
 end
 
-# TODO: Remove these two provisioners after chef-marketplace 0.0.7 has been released
-packer_provisioner "echo 'ClientAliveInterval 180' | sudo tee -a /etc/ssh/sshd_config" do
-  type 'shell'
-  inline true
-  only azure_builders
-end
-
-packer_provisioner 'sudo mkdir -p /opt/chef-compliance/{sv,init,service}' do
+packer_provisioner 'sudo rm -f /etc/chef-manage/manage.rb' do
   type 'shell'
   inline true
   inline_shebang '/bin/bash'
-  only azure_builders
+end
+
+packer_provisioner 'sudo rm -f /etc/chef-compliance/chef-compliance.rb' do
+  type 'shell'
+  inline true
+  inline_shebang '/bin/bash'
 end
 
 packer_template 'marketplace_images' do

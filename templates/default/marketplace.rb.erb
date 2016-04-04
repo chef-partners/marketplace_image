@@ -11,3 +11,7 @@ license.free_node_count = <%= @free_node_count %>
 <% if @product_code %>
 reckoner.product_code = '<%= @product_code %>'
 <% end %>
+biscotti.enabled = true
+<% if @role == 'aio' %>
+manage.marketplace.sign_up.enabled = true
+<% end %>
