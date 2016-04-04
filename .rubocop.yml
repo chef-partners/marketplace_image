@@ -16,5 +16,7 @@ Style/PerceivedComplexity:
   Enabled: false
 Style/SpaceBeforeFirstArg:
   Enabled: false
+Style/RegexpLiteral:
+  Enabled: false
 Documentation:
   Enabled: false
