@@ -29,6 +29,14 @@ module MarketplaceImageCookbook
       enabled_products.map { |p| p['name'] }
     end
 
+    def enabled_image_names
+      {
+        'aws'   => enabled_aws_image_names,
+        'azure' => enabled_azure_image_names,
+        'gce'   => enabled_gce_image_names
+      }
+    end
+
     def aws_products
       node['marketplace_image']['aws']['public']['aio']['products'] +
         node['marketplace_image']['aws']['public']['compliance']['products'] +
@@ -65,6 +73,10 @@ module MarketplaceImageCookbook
       products
     end
 
+    def enabled_aws_image_names
+      enabled_aws_products.map { |p| p['builder_options']['ami_name'] }
+    end
+
     def azure_products
       node['marketplace_image']['azure']['aio']['products'] +
         node['marketplace_image']['azure']['compliance']['products']
@@ -77,6 +89,10 @@ module MarketplaceImageCookbook
       products += node['marketplace_image']['azure']['compliance']['products'] if
         node['marketplace_image']['azure']['compliance']['enabled']
       products
+    end
+
+    def enabled_azure_image_names
+      enabled_azure_products.map { |p| p['builder_options']['user_image_label'] }
     end
 
     def enabled_azure_builders
@@ -99,6 +115,10 @@ module MarketplaceImageCookbook
       products += node['marketplace_image']['gce']['compliance']['products'] if
         node['marketplace_image']['gce']['compliance']['enabled']
       products
+    end
+
+    def enabled_gce_image_names
+      enabled_gce_products.map { |p| p['builder_options']['image_name'] }
     end
 
     def gce_builders

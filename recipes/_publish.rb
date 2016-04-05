@@ -54,3 +54,6 @@ end
 packer_template 'marketplace_images' do
   only enabled_builders
 end
+
+# Images that should have been built are saved to the node object for later smoke testing
+node.normal['marketplace_image']['published_images'] = enabled_image_names
