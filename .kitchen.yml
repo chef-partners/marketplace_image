@@ -4,6 +4,11 @@ provisioner:
   require_chef_omnibus: true
   chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
 
+verifier:
+  name: inspec
+  inspec_tests:
+    - ./test/shared_tests/smoke
+
 platforms:
   - name: publish
     driver_plugin: vagrant

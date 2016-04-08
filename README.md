@@ -77,7 +77,8 @@ credentials, ie:
       "service_management_url": "https://management.core.windows.net",
       "subscription_id": "1XXXXXX-XXXX-XXXX-XXXXXXXXXX",
       "subscription_name": "Partner Engineering",
-      "management_certificate": "MIIKDAIXXXXXXX....."
+      "management_certificate": "MIIKDAIXXXXXXX.....",
+      "storage_access_key": "7jdH....."
     }
   },
   "gce": {

@@ -1,3 +1,8 @@
+# Images that should have been built are saved to a manifest for later smoke testing
+file '/tmp/marketplace_image_manifest.json' do
+  content JSON.pretty_generate(enabled_image_names)
+end
+
 marketplace_products.each do |product|
   packer_builder product['name'] do
     options product['builder_options']
@@ -54,6 +59,3 @@ end
 packer_template 'marketplace_images' do
   only enabled_builders
 end
-
-# Images that should have been built are saved to the node object for later smoke testing
-node.normal['marketplace_image']['published_images'] = enabled_image_names
