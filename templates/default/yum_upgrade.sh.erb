@@ -2,6 +2,12 @@
 
 sudo yum update --disablerepo=chef-stable
 sudo yum upgrade -y --disablerepo=chef-stable
-
-curl -s https://packagecloud.io/install/repositories/chef/stable/script.rpm.sh | sudo bash
+sudo rpm --import https://downloads.chef.io/packages-chef-io-public.key
+cat <<EOL | sudo tee -a /etc/yum.repos.d/chef-stable.repo
+[chef-stable]
+name=chef-stable
+baseurl=https://packages.chef.io/stable-yum/el/\$releasever/\$basearch/
+gpgcheck=1
+enabled=1
+EOL
 sudo yum install chef-marketplace -y

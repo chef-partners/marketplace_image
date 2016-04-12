@@ -2,5 +2,8 @@
 
 sudo apt-get update
 sudo apt-get upgrade -y
-curl -s https://packagecloud.io/install/repositories/chef/stable/script.deb.sh | sudo bash
+sudo apt-get install apt-transport-https
+wget -qO - https://downloads.chef.io/packages-chef-io-public.key | sudo apt-key add -
+echo "deb https://packages.chef.io/stable-apt trusty main" | sudo tee -a /etc/apt/sources.list.d/chef-stable.list
+sudo apt-get update
 sudo apt-get install chef-marketplace -y
