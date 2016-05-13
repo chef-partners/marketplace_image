@@ -4,8 +4,8 @@ default['marketplace_image']['aws']['public']['compliance']['enabled'] = false
 default['marketplace_image']['aws']['public']['compliance']['fcp_enabled'] = false
 default['marketplace_image']['aws']['ic']['aio']['enabled'] = false
 default['marketplace_image']['aws']['ic']['compliance']['enabled'] = false
-default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-7e7f9013'
-default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-7e7f9013'
+default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-533ad43e'
+default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-533ad43e'
 
 cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
