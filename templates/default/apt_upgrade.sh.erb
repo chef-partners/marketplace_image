@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 sudo rm -rf /etc/apt/sources.list.d/*chef*
 sudo mkdir -p /etc/apt/sources.list.d/
 sudo apt-get update
