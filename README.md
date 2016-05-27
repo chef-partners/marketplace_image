@@ -159,7 +159,7 @@ kitchen converge aws-all-publish
 
 Currently there is no automated acceptance testing of marketplace images.
 In general what we've done is launch one of more of the newly created images
-and follow the setup [AWS](docs.chef.io/aws_marketplace.html) or
+and follow the setup [AWS](https://docs.chef.io/aws_marketplace.html) or
 [Azure](https://docs.chef.io/azure_portal.html#azure-marketplace) setup
 documentation to make sure that the user can login and start using the software.
 
