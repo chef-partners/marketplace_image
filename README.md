@@ -132,9 +132,15 @@ hash for each cloud. If you wish to run these builders you'll need to create a
 }
 ```
 
-The contents of this file can be found in lastpass with the name
-_marketplace builder credentials_ and the data_bag should _never_ be committed into
-source control.
+**This data_bag should never be committed into source control.**
+
+You can get the Azure settings from your publishsettings file - [download it from your Azure portal](http://go.microsoft.com/fwlink/?LinkId=254432).
+
+The remaining settings may (or may not) be found in lastpass with the name
+_marketplace builder credentials_ .
+
+**This data_bag should never be committed into source control.**
+
 
 ## Build Marketplace Images
 
