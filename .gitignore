@@ -27,3 +27,6 @@ chef-marketplace.deb
 chef-marketplace.rpm
 
 data_bags/*
+
+dev/cookbooks
+dev/nodes
