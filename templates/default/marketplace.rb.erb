@@ -5,7 +5,9 @@ support.email = '<%= @support_email %>'
 documentation.url = '<%= @doc_url %>'
 reporting.cron.enabled = <%= @reporting_cron_enabled %>
 disable_outbound_traffic <%= @disable_outbound_traffic %>
+<% if @role != 'automate' %>
 license.count <%= @license_count %>
+<% end %>
 license.type '<%= @license_type %>'
 license.free_node_count = <%= @free_node_count %>
 <% if @product_code %>
@@ -14,4 +16,7 @@ reckoner.product_code = '<%= @product_code %>'
 biscotti.enabled = true
 <% if @role == 'aio' %>
 manage.marketplace.sign_up.enabled = true
+<% end %>
+<% if @role != 'aio' %>
+analytics.trimmer.enabled = false
 <% end %>

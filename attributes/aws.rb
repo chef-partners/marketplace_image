@@ -1,122 +1,52 @@
-default['marketplace_image']['aws']['public']['aio']['enabled'] = false
-default['marketplace_image']['aws']['public']['aio']['fcp_enabled'] = false
-default['marketplace_image']['aws']['public']['compliance']['enabled'] = false
-default['marketplace_image']['aws']['public']['compliance']['fcp_enabled'] = false
-default['marketplace_image']['aws']['ic']['aio']['enabled'] = false
-default['marketplace_image']['aws']['ic']['compliance']['enabled'] = false
-default['marketplace_image']['aws']['aio']['source_ami'] = 'ami-533ad43e'
-default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-533ad43e'
-
 cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
 
-@timestamp = Time.now.strftime('%Y_%m_%d_%H_%M_%S')
-@invalid_ami_name_characters = /[^\w\(\)\.\-\/]/
+TIMESTAMP = Time.now.strftime('%Y_%m_%d_%H_%M_%S').freeze
+INVALID_AMI_NAME_CHARACTERS = /[^\w\(\)\.\-\/]/
 
 def normalize_name(name)
   # Append timestamp
   # Remove invalid characters
   # Ensure it's 128 characters or less
-  "#{name}_#{@timestamp}".gsub(@invalid_ami_name_characters, '').strip[0..127]
+  "#{name}_#{TIMESTAMP}".gsub(INVALID_AMI_NAME_CHARACTERS, '').strip[0..127]
 end
 
 default['marketplace_image']['aws']['cred_dir'] = cred_dir
 default['marketplace_image']['aws']['credential_file'] = credential_file
 
+default['marketplace_image']['aws']['compliance']['source_ami'] = 'ami-65ca3873'
+default['marketplace_image']['aws']['automate']['source_ami'] = 'ami-65ca3873'
+
+default['marketplace_image']['aws']['public']['compliance']['enabled'] = false
+default['marketplace_image']['aws']['public']['automate']['enabled'] = false
+
+default['marketplace_image']['aws']['ic']['compliance']['enabled'] = false
+# NOTE: Currently we don't have product codes for Automate in the IC Marketplace.
+# Until we get codes and add them into the Automate billing module we'll just
+# have legacy AIO products, of which we are no longer creating.
+default['marketplace_image']['aws']['ic']['automate']['enabled'] = false
+
 default_marketplace_config = {
-  'role' => 'aio',
+  'role' => 'automate',
   'platform' => 'aws',
   'user' => 'ec2-user',
   'support_email' => 'aws@chef.io',
-  'reporting_cron_enabled' => true,
+  'reporting_cron_enabled' => false,
   'doc_url' => 'https://docs.chef.io/aws_marketplace.html',
   'disable_outbound_traffic' => false,
-  'license_count' => 25,
-  'license_type' => 'fixed',
+  'license_type' => 'flexible',
   'free_node_count' => 5
 }
 
 aws_builder_config = {
   'type' => 'amazon-ebs',
   'region' => 'us-east-1',
-  'source_ami' => node['marketplace_image']['aws']['aio']['source_ami'],
+  'source_ami' => node['marketplace_image']['aws']['automate']['source_ami'],
   'instance_type' => 'm4.xlarge',
   'ssh_username' => 'ec2-user',
   'ssh_pty' => 'true',
   'ami_name' => 'amazon'
 }
-
-default['marketplace_image']['aws']['public']['aio']['products'] =
-  {
-    5 => 'dzsysio0zch27uban3y1c6wh7',
-    25 => '349645nlgkwcdfb8ndjeiwwp7',
-    50 => 'ckwjikuom9b37yaprlidzbqps',
-    100 => 'q995h875sbckcpafm8up762',
-    150 => '28ac4pvihsw8uoy2sukb0ihzu',
-    200 => '3nmsqv0670zsfjnqfnyd7lmdi',
-    250 => 'cfnnw6j8s75mhj3i5na0t4afq'
-  }.map do |node_count, product_code|
-    {
-      'name' => "aws_public_aio_#{node_count}",
-      'builder_options' => aws_builder_config.merge(
-        'ami_name' => normalize_name("public_aio_#{node_count}"),
-        'ami_product_codes' => [product_code]
-      ),
-      'marketplace_config_options' => default_marketplace_config.merge(
-        'license_count' => node_count,
-        'product_code' => product_code
-      )
-    }
-  end
-
-default['marketplace_image']['aws']['public']['compliance']['products'] =
-  {
-    5 => '148p1m5zz5zhinwoggpqeavis',
-    25 => '7vylx7v9xdlma0mj2apjyix9w',
-    50 => 'c8vcwhxd8seccf77fz1ccgpe4',
-    100 => 'a5mqx9w3n56pvjedo8iw0toj2',
-    150 => 'gg239559lun7g9v74fc9caj5',
-    200 => '86ocpc6jfmdp9jcej5oyji1rz',
-    250 => 'ezw9hgu9mtlvqwkayp5gw15is'
-  }.map do |node_count, product_code|
-    {
-      'name' => "aws_public_compliance_#{node_count}",
-      'builder_options' => aws_builder_config.merge(
-        'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
-        'ami_name' => normalize_name("public_compliance_#{node_count}"),
-        'ami_product_codes' => [product_code]
-      ),
-      'marketplace_config_options' => default_marketplace_config.merge(
-        'license_count' => node_count,
-        'product_code' => product_code,
-        'role' => 'compliance'
-      )
-    }
-  end
-
-default['marketplace_image']['aws']['ic']['aio']['products'] =
-  {
-    5 => 'dgivcepn261oi5ul0fdxu6drf',
-    25 => 'cntn7cg2u1iiwv0eah6fnkkbj',
-    50 => 'ax4j22h69yeb5824i1qhobdaw',
-    100 => 'dqbbw3v3mqcm5vvr8fdgrw0cy',
-    150 => 'dqvg1zvlvsch9fsnajua0e3df',
-    200 => '6p9oh9isrga3p00bwfobn8gr0',
-    250 => 'c4yh8519ogsqr344akhv9jk91'
-  }.map do |node_count, product_code|
-    {
-      'name' => "aws_ic_aio_#{node_count}",
-      'builder_options' => aws_builder_config.merge(
-        'ami_name' => normalize_name("ic_aio_#{node_count}"),
-        'ami_product_codes' => [product_code]
-      ),
-      'marketplace_config_options' => default_marketplace_config.merge(
-        'license_count' => node_count,
-        'product_code' => product_code,
-        'disable_outbound_traffic' => true
-      )
-    }
-  end
 
 default['marketplace_image']['aws']['ic']['compliance']['products'] =
   {
@@ -137,6 +67,7 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
         'license_count' => node_count,
+        'license_type' => 'fixed',
         'product_code' => product_code,
         'role' => 'compliance',
         'disable_outbound_traffic' => true
@@ -144,29 +75,29 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
     }
   end
 
-default['marketplace_image']['aws']['public']['aio']['fcp'] =
+default['marketplace_image']['aws']['public']['compliance'] =
   {
-    'name' => 'aws_public_aio_flexible',
+    'name' => 'aws_public_compliance',
     'builder_options' => aws_builder_config.merge(
-      'ami_product_codes' => ['dlna41ywkqax795eganhflsm8'],
-      'ami_name' => normalize_name('public_aio_flexible')
+      'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
+      'ami_product_codes' => ['8a3w64phkkutljzrbdqjrmc8f'],
+      'ami_name' => normalize_name('public_compliance')
+    ),
+    'marketplace_config_options' => default_marketplace_config.merge(
+      'product_code' => '8a3w64phkkutljzrbdqjrmc8f',
+      'role' => 'compliance'
+    )
+  }
+
+default['marketplace_image']['aws']['public']['automate'] =
+  {
+    'name' => 'aws_public_automate',
+    'builder_options' => aws_builder_config.merge(
+      'ami_product_codes' => ['ed3lb0p2oc2ot3v9v72ku1pdt'],
+      'ami_name' => normalize_name('public_automate')
     ),
     'marketplace_config_options' => default_marketplace_config.merge(
       'license_type' => 'flexible',
       'product_code' => 'dlna41ywkqax795eganhflsm8'
-    )
-  }
-default['marketplace_image']['aws']['public']['compliance']['fcp'] =
-  {
-    'name' => 'aws_public_compliance_flexible',
-    'builder_options' => aws_builder_config.merge(
-      'source_ami' => node['marketplace_image']['aws']['compliance']['source_ami'],
-      'ami_product_codes' => ['8a3w64phkkutljzrbdqjrmc8f'],
-      'ami_name' => normalize_name('public_compliance_flexible')
-    ),
-    'marketplace_config_options' => default_marketplace_config.merge(
-      'license_type' => 'flexible',
-      'product_code' => '8a3w64phkkutljzrbdqjrmc8f',
-      'role' => 'compliance'
     )
   }

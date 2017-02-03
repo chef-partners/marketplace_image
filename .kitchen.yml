@@ -3,6 +3,9 @@ provisioner:
   name: chef_zero
   require_chef_omnibus: true
   chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
+  attributes:
+    marketplace_image:
+      package_install_channel: <%= ENV['CHANNEL'] || 'stable' %>
 
 platforms:
   - name: publish
@@ -21,19 +24,19 @@ suites:
         azure:
           compliance:
             enabled: true
-  - name: azure_aio
+  - name: azure_automate
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         azure:
-          aio:
+          automate:
             enabled: true
   - name: azure_all
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         azure:
-          aio:
+          automate:
             enabled: true
           compliance:
             enabled: true
@@ -44,30 +47,30 @@ suites:
         gce:
           compliance:
             enabled: true
-  - name: gce_aio
+  - name: gce_automate
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         gce:
-          aio:
+          automate:
             enabled: true
   - name: gce_all
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         gce:
-          aio:
+          automate:
             enabled: true
           compliance:
             enabled: true
 
-  - name: aws_public_aio
+  - name: aws_public_automate
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         aws:
           public:
-            aio:
+            automate:
               enabled: true
   - name: aws_public_compliance
     run_list: "marketplace_image::default"
@@ -77,54 +80,16 @@ suites:
           public:
             compliance:
               enabled: true
-  - name: aws_public_flexible_aio
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            aio:
-              fcp_enabled: true
-  - name: aws_public_flexible_compliance
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            compliance:
-              fcp_enabled: true
-  - name: aws_public_flexible_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            aio:
-              fcp_enabled: true
-            compliance:
-              fcp_enabled: true
-  - name: aws_public_fixed_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            aio:
-              enabled: true
-            compliance:
-              enabled: true
   - name: aws_public_all
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         aws:
           public:
-            aio:
+            automate:
               enabled: true
-              fcp_enabled: true
             compliance:
               enabled: true
-              fcp_enabled: true
   - name: aws_ic_compliance
     run_list: "marketplace_image::default"
     attributes:
@@ -133,13 +98,13 @@ suites:
           ic:
             compliance:
               enabled: true
-  - name: aws_ic_aio
+  - name: aws_ic_automate
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         aws:
           ic:
-            aio:
+            automate:
               enabled: true
   - name: aws_ic_all
     run_list: "marketplace_image::default"
@@ -147,7 +112,7 @@ suites:
       marketplace_image:
         aws:
           ic:
-            aio:
+            automate:
               enabled: true
             compliance:
               enabled: true
@@ -157,14 +122,12 @@ suites:
       marketplace_image:
         aws:
           public:
-            aio:
+            automate:
               enabled: true
-              fcp_enabled: true
             compliance:
               enabled: true
-              fcp_enabled: true
           ic:
-            aio:
+            automate:
               enabled: true
             compliance:
               enabled: true
@@ -174,24 +137,22 @@ suites:
       marketplace_image:
         aws:
           public:
-            aio:
+            automate:
               enabled: true
-              fcp_enabled: true
             compliance:
               enabled: true
-              fcp_enabled: true
           ic:
-            aio:
+            automate:
               enabled: true
             compliance:
               enabled: true
         azure:
-          aio:
+          automate:
             enabled: true
           compliance:
             enabled: true
         gce:
-          aio:
+          automate:
             enabled: true
           compliance:
             enabled: true

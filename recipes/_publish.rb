@@ -12,25 +12,48 @@ marketplace_products.each do |product|
   end
 end
 
-packer_provisioner '/tmp/chef-server.rb' do
-  type 'file'
-  source 'chef-server.rb.erb'
-end
-
 packer_provisioner 'setup_marketplace' do
   type 'shell'
   source 'setup_marketplace.sh.erb'
 end
 
-packer_provisioner 'apt_upgrade' do
+packer_provisioner 'setup_apt_current' do
   type 'shell'
-  source 'apt_upgrade.sh.erb'
+  source 'setup_apt_current.sh.erb'
+  only azure_builders
+  only_if { use_current_repo? }
+end
+
+packer_provisioner 'setup_apt_stable' do
+  type 'shell'
+  source 'setup_apt_current.sh.erb'
+  only azure_builders
+  not_if { use_current_repo? }
+end
+
+packer_provisioner 'install_marketplace_apt' do
+  type 'shell'
+  source 'install_marketplace_apt.sh.erb'
   only azure_builders
 end
 
-packer_provisioner 'yum_upgrade' do
+packer_provisioner 'setup_yum_current' do
   type 'shell'
-  source 'yum_upgrade.sh.erb'
+  source 'setup_yum_current.sh.erb'
+  except azure_builders
+  only_if { use_current_repo? }
+end
+
+packer_provisioner 'setup_yum_stable' do
+  type 'shell'
+  source 'setup_yum_stable.sh.erb'
+  except azure_builders
+  not_if { use_current_repo? }
+end
+
+packer_provisioner 'install_marketplace_yum' do
+  type 'shell'
+  source 'install_marketplace_yum.sh.erb'
   except azure_builders
 end
 
@@ -39,6 +62,7 @@ packer_provisioner 'prepare_for_publishing' do
   source 'prepare_for_publishing.sh.erb'
 end
 
+# TODO: Can probably remove these but they're not hurting anything
 packer_provisioner 'sudo rm -f /etc/chef-manage/manage.rb' do
   type 'shell'
   inline true

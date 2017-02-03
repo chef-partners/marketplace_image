@@ -38,13 +38,10 @@ module MarketplaceImageCookbook
     end
 
     def aws_products
-      node['marketplace_image']['aws']['public']['aio']['products'] +
-        node['marketplace_image']['aws']['public']['compliance']['products'] +
-        node['marketplace_image']['aws']['ic']['aio']['products'] +
-        node['marketplace_image']['aws']['ic']['compliance']['products'] +
+      node['marketplace_image']['aws']['ic']['compliance']['products'] +
         [
-          node['marketplace_image']['aws']['public']['aio']['fcp'],
-          node['marketplace_image']['aws']['public']['compliance']['fcp']
+          node['marketplace_image']['aws']['public']['automate'],
+          node['marketplace_image']['aws']['public']['compliance']
         ]
     end
 
@@ -58,18 +55,12 @@ module MarketplaceImageCookbook
 
     def enabled_aws_products
       products = []
-      products += node['marketplace_image']['aws']['public']['aio']['products'] if
-        node['marketplace_image']['aws']['public']['aio']['enabled']
-      products += node['marketplace_image']['aws']['public']['compliance']['products'] if
+      products << node['marketplace_image']['aws']['public']['compliance'] if
         node['marketplace_image']['aws']['public']['compliance']['enabled']
-      products += node['marketplace_image']['aws']['ic']['aio']['products'] if
-        node['marketplace_image']['aws']['ic']['aio']['enabled']
+      products << node['marketplace_image']['aws']['public']['automate'] if
+        node['marketplace_image']['aws']['public']['automate']['enabled']
       products += node['marketplace_image']['aws']['ic']['compliance']['products'] if
         node['marketplace_image']['aws']['ic']['compliance']['enabled']
-      products << node['marketplace_image']['aws']['public']['aio']['fcp'] if
-        node['marketplace_image']['aws']['public']['aio']['fcp_enabled']
-      products << node['marketplace_image']['aws']['public']['compliance']['fcp'] if
-        node['marketplace_image']['aws']['public']['compliance']['fcp_enabled']
       products
     end
 
@@ -78,14 +69,15 @@ module MarketplaceImageCookbook
     end
 
     def azure_products
-      node['marketplace_image']['azure']['aio']['products'] +
-        node['marketplace_image']['azure']['compliance']['products']
+      products = node['marketplace_image']['azure']['compliance']['products'].to_a
+      products << node['marketplace_image']['azure']['automate']
+      products
     end
 
     def enabled_azure_products
       products = []
-      products += node['marketplace_image']['azure']['aio']['products'] if
-        node['marketplace_image']['azure']['aio']['enabled']
+      products << node['marketplace_image']['azure']['automate'] if
+        node['marketplace_image']['azure']['automate']['enabled']
       products += node['marketplace_image']['azure']['compliance']['products'] if
         node['marketplace_image']['azure']['compliance']['enabled']
       products
@@ -127,6 +119,29 @@ module MarketplaceImageCookbook
 
     def enabled_gce_builders
       enabled_gce_products.map { |p| p['name'] }
+    end
+
+    def automate_products
+      [node['marketplace_image']['aws']['public']['automate']]
+    end
+
+    def automate_builders
+      [node['marketplace_image']['aws']['public']['automate']['name']]
+    end
+
+    def compliance_builders
+      builders = [node['marketplace_image']['aws']['public']['compliance']]
+      builders += node['marketplace_image']['aws']['ic']['compliance']['products'].map do |product|
+        product['name']
+      end
+      builders += node['marketplace_image']['azure']['compliance']['products'].map do |product|
+        product['name']
+      end
+      builders
+    end
+
+    def use_current_repo?
+      node['marketplace_image']['package_install_channel'].casecmp('current') == 0
     end
   end
 end

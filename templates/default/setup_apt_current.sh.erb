@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -ex
+
+sudo rm -rf /etc/apt/sources.list.d/*chef*
+sudo mkdir -p /etc/apt/sources.list.d/
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get install apt-transport-https -y
+sudo wget -qO - https://packages.chef.io/chef.asc | sudo apt-key add -
+echo "deb https://packages.chef.io/repos/apt/current trusty main" | sudo tee /etc/apt/sources.list.d/chef-current.list
