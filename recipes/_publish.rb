@@ -57,9 +57,16 @@ packer_provisioner 'install_marketplace_yum' do
   except azure_builders
 end
 
-packer_provisioner 'prepare_for_publishing' do
+packer_provisioner 'prepare_automate_for_publishing' do
   type 'shell'
-  source 'prepare_for_publishing.sh.erb'
+  source 'prepare_automate_for_publishing.sh.erb'
+  only automate_builders
+end
+
+packer_provisioner 'prepare_compliance_for_publishing' do
+  type 'shell'
+  source 'prepare_compliance_for_publishing.sh.erb'
+  only compliance_builders
 end
 
 # TODO: Can probably remove these but they're not hurting anything

@@ -126,11 +126,13 @@ module MarketplaceImageCookbook
     end
 
     def automate_builders
-      [node['marketplace_image']['aws']['public']['automate']['name']]
+      [ node['marketplace_image']['aws']['public']['automate']['name'],
+        node['marketplace_image']['azure']['automate']['name'],
+      ]
     end
 
     def compliance_builders
-      builders = [node['marketplace_image']['aws']['public']['compliance']]
+      builders = [node['marketplace_image']['aws']['public']['compliance']['name']]
       builders += node['marketplace_image']['aws']['ic']['compliance']['products'].map do |product|
         product['name']
       end

@@ -3,5 +3,5 @@
 set -ex
 
 sudo chef-marketplace-ctl reconfigure
-sudo chef-marketplace-ctl upgrade -y --override-outbound-traffic
+sudo chef-marketplace-ctl upgrade --automate --server --override-outbound-traffic
 sudo chef-marketplace-ctl prepare-for-publishing yes
