@@ -98,6 +98,7 @@ default['marketplace_image']['aws']['public']['automate'] =
     ),
     'marketplace_config_options' => default_marketplace_config.merge(
       'license_type' => 'flexible',
+      'free_node_count' => 10,
       'product_code' => 'dlna41ywkqax795eganhflsm8'
     )
   }
