@@ -12,11 +12,12 @@ default_marketplace_config = {
   'platform' => 'azure',
   'user' => 'ubuntu',
   'support_email' => 'support@chef.io',
+  'sales_email' => 'amp@chef.io',
   'reporting_cron_enabled' => true,
   'doc_url' => 'https://docs.chef.io/azure_portal.html#azure-marketplace',
   'disable_outbound_traffic' => false,
   'license_type' => 'BYOL',
-  'free_node_count' => 5
+  'free_node_count' => 5,
 }
 
 azure_builder_config = {
@@ -30,13 +31,13 @@ azure_builder_config = {
   'os_image_label' => 'Ubuntu Server 14.04 LTS',
   'location' => 'East US',
   'instance_size' => 'Large',
-  'user_image_label' => 'Chef_Automate_BYOL_{{timestamp}}'
+  'user_image_label' => 'Chef_Automate_BYOL_{{timestamp}}',
 }
 
 default['marketplace_image']['azure']['automate'] = {
   'name' => 'azure_automate_BYOL',
   'builder_options' => azure_builder_config,
-  'marketplace_config_options' => default_marketplace_config
+  'marketplace_config_options' => default_marketplace_config,
 }
 
 default['marketplace_image']['azure']['compliance']['products'] =
@@ -51,6 +52,6 @@ default['marketplace_image']['azure']['compliance']['products'] =
         'license_count' => node_count,
         'license_type' => 'fixed',
         'role' => 'compliance'
-      )
+      ),
     }
   end

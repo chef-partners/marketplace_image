@@ -31,11 +31,12 @@ default_marketplace_config = {
   'platform' => 'aws',
   'user' => 'ec2-user',
   'support_email' => 'aws@chef.io',
+  'sales_email' => 'awesome@chef.io',
   'reporting_cron_enabled' => false,
   'doc_url' => 'https://docs.chef.io/aws_marketplace.html',
   'disable_outbound_traffic' => false,
   'license_type' => 'flexible',
-  'free_node_count' => 5
+  'free_node_count' => 5,
 }
 
 aws_builder_config = {
@@ -45,7 +46,7 @@ aws_builder_config = {
   'instance_type' => 'm4.xlarge',
   'ssh_username' => 'ec2-user',
   'ssh_pty' => 'true',
-  'ami_name' => 'amazon'
+  'ami_name' => 'amazon',
 }
 
 default['marketplace_image']['aws']['ic']['compliance']['products'] =
@@ -56,7 +57,7 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
     100 => 'bjg704s75oq34nrg9sg9zex8v',
     150 => '1igoiq6sm5nq6j4tbzr9p2z3z',
     200 => '5igut39qk86ttq9qztlhmncrb',
-    250 => 'bv1cblebexhoamj2ief0t3sih'
+    250 => 'bv1cblebexhoamj2ief0t3sih',
   }.map do |node_count, product_code|
     {
       'name' => "aws_ic_compliance_#{node_count}",
@@ -71,7 +72,7 @@ default['marketplace_image']['aws']['ic']['compliance']['products'] =
         'product_code' => product_code,
         'role' => 'compliance',
         'disable_outbound_traffic' => true
-      )
+      ),
     }
   end
 
@@ -86,7 +87,7 @@ default['marketplace_image']['aws']['public']['compliance'] =
     'marketplace_config_options' => default_marketplace_config.merge(
       'product_code' => '8a3w64phkkutljzrbdqjrmc8f',
       'role' => 'compliance'
-    )
+    ),
   }
 
 default['marketplace_image']['aws']['public']['automate'] =
@@ -100,5 +101,5 @@ default['marketplace_image']['aws']['public']['automate'] =
       'license_type' => 'flexible',
       'free_node_count' => 10,
       'product_code' => 'ed3lb0p2oc2ot3v9v72ku1pdt'
-    )
+    ),
   }
