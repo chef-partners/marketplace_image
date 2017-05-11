@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 cred_dir = ::File.expand_path(::File.join('~', '.azure'))
 publish_settings_path = ::File.join(cred_dir, 'marketplace.publish_settings')
 

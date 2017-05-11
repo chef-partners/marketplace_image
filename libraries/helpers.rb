@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 #
 # Author:: Partner Engineering <partnereng@chef.io>
 # Copyright (c) 2016, Chef Software, Inc. <legal@chef.io>
@@ -33,7 +34,7 @@ module MarketplaceImageCookbook
       {
         'aws'   => enabled_aws_image_names,
         'azure' => enabled_azure_image_names,
-        'gce'   => enabled_gce_image_names
+        'gce'   => enabled_gce_image_names,
       }
     end
 
@@ -41,7 +42,7 @@ module MarketplaceImageCookbook
       node['marketplace_image']['aws']['ic']['compliance']['products'] +
         [
           node['marketplace_image']['aws']['public']['automate'],
-          node['marketplace_image']['aws']['public']['compliance']
+          node['marketplace_image']['aws']['public']['compliance'],
         ]
     end
 
@@ -126,8 +127,8 @@ module MarketplaceImageCookbook
     end
 
     def automate_builders
-      [ node['marketplace_image']['aws']['public']['automate']['name'],
-        node['marketplace_image']['azure']['automate']['name'],
+      [node['marketplace_image']['aws']['public']['automate']['name'],
+       node['marketplace_image']['azure']['automate']['name'],
       ]
     end
 

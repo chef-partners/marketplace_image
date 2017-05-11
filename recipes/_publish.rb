@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 marketplace_products.each do |product|
   packer_builder product['name'] do
     options product['builder_options']
@@ -26,7 +28,7 @@ end
 
 packer_provisioner 'setup_apt_stable' do
   type 'shell'
-  source 'setup_apt_current.sh.erb'
+  source 'setup_apt_stable.sh.erb'
   only azure_builders
   not_if { use_current_repo? }
 end
