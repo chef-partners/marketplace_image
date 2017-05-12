@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # this recipe is only meant to be run for development
 
 # write marketplace config

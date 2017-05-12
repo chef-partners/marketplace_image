@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 default['marketplace_image']['gce']['aio']['enabled'] = false
 default['marketplace_image']['gce']['compliance']['enabled'] = false
 
@@ -16,7 +17,7 @@ default_marketplace_config = {
   'disable_outbound_traffic' => false,
   'license_count' => 25,
   'license_type' => 'fixed',
-  'free_node_count' => 5
+  'free_node_count' => 5,
 }
 
 gce_builder_config = {
@@ -37,7 +38,7 @@ default['marketplace_image']['gce']['aio']['products'] =
       ),
       'marketplace_config_options' => default_marketplace_config.merge(
         'license_count' => node_count
-      )
+      ),
     }
   end
 
@@ -52,6 +53,6 @@ default['marketplace_image']['gce']['compliance']['products'] =
         'license_count' => node_count,
         'role' => 'compliance',
         'doc_url' => 'https://docs.chef.io/install_compliance.html#google-marketplace'
-      )
+      ),
     }
   end

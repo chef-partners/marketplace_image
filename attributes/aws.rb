@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
 

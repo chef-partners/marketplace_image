@@ -1,11 +1,13 @@
+# frozen_string_literal: true
 name 'marketplace_image'
 maintainer 'Chef Partner Engineering'
 maintainer_email 'partnereng@chef.io'
 license 'Apache 2.0'
 description 'Installs/Configures marketplace_image'
 long_description 'Installs/Configures marketplace_image'
-version '0.4.2'
+version '0.5.0'
 
-depends 'fancy_execute'
+chef_version '>=12.19'
+
 depends 'packman'
-depends 'apt'
+depends 'fancy_execute', '~> 2.0'
