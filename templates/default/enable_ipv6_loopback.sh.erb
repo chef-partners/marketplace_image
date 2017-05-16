@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# HACK to work around https://chefio.atlassian.net/browse/POOL-610
+#
+# Enabled the ipv6 loopback address to make chef server and EMPD happy
+if ! grep net.ipv6.conf.lo.disable_ipv6 /etc/sysctl.conf; then
+  sudo echo "net.ipv6.conf.lo.disable_ipv6=0" >> /etc/sysctl.conf
+fi
