@@ -39,6 +39,11 @@ packer_provisioner 'install_marketplace_apt' do
   only azure_builders
 end
 
+packer_provisioner 'enable_ipv6_loopback' do
+  type 'shell'
+  source 'enable_ipv6_loopback.sh.erb'
+end
+
 packer_provisioner 'setup_yum_current' do
   type 'shell'
   source 'setup_yum_current.sh.erb'
