@@ -201,7 +201,17 @@ Marketplace security scanner.
 1. Email <aws-marketplace-seller-ops@amazon.com> to notify them of the changes
   and that that you'd like a new release done. Generally you'll hear back from
   them within 24 hours and you'll have the image published in a few days. The
-  IC Marketplace can take upwards of 2 months to become available.
+  IC Marketplace can take upwards of 2 months to become available. Make sure
+  to CC <aws-marketplace@chef.io> so that all stakeholders are in the loop. 
+
+1. Locate the submittal doc in Engineering > Marketplace > Marketplace Image
+  Submittal History on drive. Add a new entry for the image and cloud.
+
+1. AWS will announce that the image is staged via email. Test the image. If any
+  issues are found, fix them and repeat the process from step one. If no issues
+  are found, request that they publish the image.
+
+1. Make sure you update the submittal history document during each stage.
 
 ### Azure Release
 
@@ -241,6 +251,15 @@ azure storage container sas create -a ampimages -k <primary storage account key>
 1. For each SKU and license pack add a new VM image version with a your blob link.
 
 1. On the publish tab push to staging.
+
+1. Locate the submittal doc in Engineering > Marketplace > Marketplace Image
+  Submittal History on drive. Add a new entry for the image and cloud.
+
+1. Azure will announce that the image is staged via email. Test the image. If any
+  issues are found, fix them and repeat the process from step one. If no issues
+  are found, request that they publish the image.
+
+1. Make sure you update the submittal history document during each stage.
 
 ## License and Authors
 
