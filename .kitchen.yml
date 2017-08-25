@@ -40,6 +40,7 @@ suites:
             enabled: true
           compliance:
             enabled: true
+
   - name: gce_compliance
     run_list: "marketplace_image::default"
     attributes:
@@ -55,6 +56,30 @@ suites:
           automate:
             enabled: true
   - name: gce_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        gce:
+          automate:
+            enabled: true
+          compliance:
+            enabled: true
+
+  - name: vmware_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        vmware:
+          compliance:
+            enabled: true
+  - name: vmware_automate
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        vmware:
+          automate:
+            enabled: true
+  - name: vmware_all
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
@@ -131,6 +156,7 @@ suites:
               enabled: true
             compliance:
               enabled: true
+
   - name: all
     run_list: "marketplace_image::default"
     attributes:
@@ -152,6 +178,11 @@ suites:
           compliance:
             enabled: true
         gce:
+          automate:
+            enabled: true
+          compliance:
+            enabled: true
+        vmware:
           automate:
             enabled: true
           compliance:

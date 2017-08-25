@@ -40,3 +40,12 @@ if creds['gce']
     content JSON.pretty_generate(creds['gce']['account'])
   end
 end
+
+if creds['vmware']
+  directory node['marketplace_image']['vmware']['cred_dir']
+
+  file node['marketplace_image']['vmware']['account_file'] do
+    sensitive true
+    content JSON.pretty_generate(creds['vmware']['account'])
+  end
+end
