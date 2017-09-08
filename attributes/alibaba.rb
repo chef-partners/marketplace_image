@@ -18,13 +18,16 @@ default['marketplace_image']['alibaba']['credential_file'] = credential_file
 default['marketplace_image']['alibaba']['public']['compliance']['enabled'] = false
 default['marketplace_image']['alibaba']['public']['automate']['enabled'] = false
 
-default['marketplace_image']['alibaba']['marketplace']['url'] = '
-http://chef-software.oss-cn-beijing.aliyuncs.com/chef-marketplace_0.2.5%2B20170906073057-1_amd64.deb'
+default['marketplace_image']['alibaba']['product_urls'] = {
+  'marketplace' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-marketplace_0.2.5%2B20170908141726.git.1.8d5bc1c-1_amd64.deb',
+  'automate' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/automate_1.6.95-1_amd64.deb',
+  'chef_server' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-server-core_12.15.8-1_amd64.deb',
+}
 
 default_marketplace_config = {
   'role' => 'automate',
   'platform' => 'alibaba',
-  'user' => 'root',
+  'user' => 'ubuntu',
   'support_email' => 'aws@chef.io',
   'sales_email' => 'awesome@chef.io',
   'reporting_cron_enabled' => false,
@@ -38,7 +41,7 @@ alibaba_builder_config = {
   'type' => 'alicloud-ecs',
   'region' => 'cn-beijing',
   'image_name' => 'chef_automate',
-  'source_image' => 'ubuntu_14_0405_64_40G_alibase_20170711.vhd',
+  'source_image' => 'ubuntu_14_0405_64_20G_alibase_20170824.vhd',
   'ssh_username' => 'root',
   'instance_type' => 'ecs.n2.medium',
   'io_optimized' => 'true',

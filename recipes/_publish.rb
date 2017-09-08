@@ -43,7 +43,16 @@ packer_provisioner 'install_marketplace_oss' do
   type 'shell'
   source 'install_marketplace_oss.sh.erb'
   variables(
-    'url' => node['marketplace_image']['alibaba']['marketplace']['url']
+    url: node['marketplace_image']['alibaba']['product_urls']['marketplace']
+  )
+  only alibaba_builders
+end
+
+packer_provisioner '/tmp/product_download_urls.json' do
+  type 'file'
+  source 'product_download_urls.json.erb'
+  variables(
+    urls: node['marketplace_image']['alibaba']['product_urls'].to_json
   )
   only alibaba_builders
 end
