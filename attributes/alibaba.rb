@@ -19,7 +19,7 @@ default['marketplace_image']['alibaba']['public']['compliance']['enabled'] = fal
 default['marketplace_image']['alibaba']['public']['automate']['enabled'] = false
 
 default['marketplace_image']['alibaba']['product_urls'] = {
-  'marketplace' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-marketplace_0.2.5%2B20170908141726.git.1.8d5bc1c-1_amd64.deb',
+  'marketplace' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-marketplace_0.2.5%2B20170911103840.git.2.1c6a67f-1_amd64.deb',
   'automate' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/automate_1.6.95-1_amd64.deb',
   'chef_server' => 'http://chef-software.oss-cn-beijing.aliyuncs.com/chef-server-core_12.15.8-1_amd64.deb',
 }
