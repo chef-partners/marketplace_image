@@ -33,7 +33,7 @@ default_marketplace_config = {
   'reporting_cron_enabled' => false,
   'doc_url' => 'https://docs.chef.io/alibaba_marketplace.html',
   'disable_outbound_traffic' => false,
-  'license_type' => 'flexible',
+  'license_type' => 'fixed',
   'free_node_count' => 5,
 }
 
