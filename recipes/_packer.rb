@@ -48,4 +48,21 @@ if creds['vmware']
     sensitive true
     content JSON.pretty_generate(creds['vmware']['account'])
   end
+
+  template '/tmp/ks.cfg' do
+    source 'ks.cfg'
+    variables({
+      :root_password => node['vmware']['packer_ssh_password']
+    })
+  end
+
+  remote_file '/tmp/ovftool.bundle' do
+    source 'https://s3-us-west-2.amazonaws.com/sce-pub/VMware-ovftool-4.2.0-5965791-lin.x86_64.bundle'
+    mode '0755'
+  end
+
+  #execute 'install-ovftool' do
+  #	cwd '/tmp'
+  #	command './ovftool.bundle --eulas-agreed'
+  #end
 end

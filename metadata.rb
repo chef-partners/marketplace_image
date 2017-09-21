@@ -10,4 +10,4 @@ version '0.5.0'
 chef_version '>=12.19'
 
 depends 'packman'
-depends 'fancy_execute', '~> 2.0'
+#depends 'fancy_execute', '~> 2.0'
