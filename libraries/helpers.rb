@@ -19,11 +19,11 @@
 module MarketplaceImageCookbook
   module Helpers
     def marketplace_products
-      aws_products + azure_products + gce_products
+      aws_products + azure_products + gce_products + alibaba_products
     end
 
     def enabled_products
-      enabled_aws_products + enabled_azure_products + enabled_gce_products
+      enabled_aws_products + enabled_azure_products + enabled_gce_products + enabled_alibaba_products
     end
 
     def enabled_builders
@@ -122,13 +122,32 @@ module MarketplaceImageCookbook
       enabled_gce_products.map { |p| p['name'] }
     end
 
+    def alibaba_products
+      products = []
+      products << node['marketplace_image']['alibaba']['automate']
+      products
+    end
+
+    def enabled_alibaba_products
+      products = []
+      products << node['marketplace_image']['alibaba']['automate'] if
+        node['marketplace_image']['alibaba']['automate']['enabled']
+      products
+    end
+
+    def alibaba_builders
+      alibaba_products.map { |p| p['name'] }
+    end
+
     def automate_products
       [node['marketplace_image']['aws']['public']['automate']]
     end
 
     def automate_builders
-      [node['marketplace_image']['aws']['public']['automate']['name'],
-       node['marketplace_image']['azure']['automate']['name'],
+      [
+        node['marketplace_image']['aws']['public']['automate']['name'],
+        node['marketplace_image']['azure']['automate']['name'],
+        node['marketplace_image']['alibaba']['automate']['name'],
       ]
     end
 

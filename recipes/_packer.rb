@@ -40,3 +40,9 @@ if creds['gce']
     content JSON.pretty_generate(creds['gce']['account'])
   end
 end
+
+# Set the credentials for Alibaba Cloud as environment variables
+if creds['alibaba']
+  ENV['ALICLOUD_ACCESS_KEY'] = creds['alibaba']['access_key']
+  ENV['ALICLOUD_SECRET_KEY'] = creds['alibaba']['secret_key']
+end

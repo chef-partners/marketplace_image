@@ -16,7 +16,20 @@ platforms:
         cpus: 2
         memory: 4096
 
+
 suites:
+  - name: alibaba_automate
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        alibaba:
+          automate:
+            enabled: true
+      packman:
+        version: 1.0.4
+        checksums:
+          "1.0.4": 646da085cbcb8c666474d500a44d933df533cf4f1ff286193d67b51372c3c59e
+
   - name: azure_compliance
     run_list: "marketplace_image::default"
     attributes:

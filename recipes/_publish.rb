@@ -22,14 +22,14 @@ end
 packer_provisioner 'setup_apt_current' do
   type 'shell'
   source 'setup_apt_current.sh.erb'
-  only azure_builders
+  only azure_builders + alibaba_builders
   only_if { use_current_repo? }
 end
 
 packer_provisioner 'setup_apt_stable' do
   type 'shell'
   source 'setup_apt_stable.sh.erb'
-  only azure_builders
+  only azure_builders + alibaba_builders
   not_if { use_current_repo? }
 end
 
@@ -37,6 +37,24 @@ packer_provisioner 'install_marketplace_apt' do
   type 'shell'
   source 'install_marketplace_apt.sh.erb'
   only azure_builders
+end
+
+packer_provisioner 'install_marketplace_oss' do
+  type 'shell'
+  source 'install_marketplace_oss.sh.erb'
+  variables(
+    url: node['marketplace_image']['alibaba']['product_urls']['marketplace']
+  )
+  only alibaba_builders
+end
+
+packer_provisioner '/tmp/product_download_urls.json' do
+  type 'file'
+  source 'product_download_urls.json.erb'
+  variables(
+    urls: node['marketplace_image']['alibaba']['product_urls'].to_json
+  )
+  only alibaba_builders
 end
 
 packer_provisioner 'enable_ipv6_loopback' do
@@ -47,21 +65,21 @@ end
 packer_provisioner 'setup_yum_current' do
   type 'shell'
   source 'setup_yum_current.sh.erb'
-  except azure_builders
+  except azure_builders + alibaba_builders
   only_if { use_current_repo? }
 end
 
 packer_provisioner 'setup_yum_stable' do
   type 'shell'
   source 'setup_yum_stable.sh.erb'
-  except azure_builders
+  except azure_builders + alibaba_builders
   not_if { use_current_repo? }
 end
 
 packer_provisioner 'install_marketplace_yum' do
   type 'shell'
   source 'install_marketplace_yum.sh.erb'
-  except azure_builders
+  except azure_builders + alibaba_builders
 end
 
 packer_provisioner 'prepare_automate_for_publishing' do
