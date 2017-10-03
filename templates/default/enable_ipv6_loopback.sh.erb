@@ -6,3 +6,8 @@
 if ! grep net.ipv6.conf.lo.disable_ipv6 /etc/sysctl.conf; then
   echo "net.ipv6.conf.lo.disable_ipv6=0" | sudo tee -a /etc/sysctl.conf
 fi
+
+# Alibaba images have the loopback explicitly disabled
+if grep "net.ipv6.conf.lo.disable_ipv6 = 1" /etc/sysctl.conf; then
+  sed -i.bak "s/net\.ipv6\.conf\.lo\.disable_ipv6 = 1/net.ipv6.conf.lo.disable_ipv6 = 0/g" /etc/sysctl.conf
+fi
