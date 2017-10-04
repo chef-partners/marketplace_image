@@ -19,11 +19,11 @@
 module MarketplaceImageCookbook
   module Helpers
     def marketplace_products
-      aws_products + azure_products + gce_products
+      aws_products + azure_products + gce_products + vmware_products
     end
 
     def enabled_products
-      enabled_aws_products + enabled_azure_products + enabled_gce_products
+      enabled_aws_products + enabled_azure_products + enabled_gce_products + enabled_vmware_products
     end
 
     def enabled_builders
@@ -108,6 +108,28 @@ module MarketplaceImageCookbook
       products += node['marketplace_image']['gce']['compliance']['products'] if
         node['marketplace_image']['gce']['compliance']['enabled']
       products
+    end
+
+    def vmware_products
+      node['marketplace_image']['vmware']['aio']['products'] +
+        node['marketplace_image']['vmware']['compliance']['products']
+    end
+
+    def enabled_vmware_products
+      products = []
+      products += node['marketplace_image']['vmware']['aio']['products'] if
+        node['marketplace_image']['vmware']['automate']['enabled']
+      products += node['marketplace_image']['vmware']['compliance']['products'] if
+        node['marketplace_image']['vmware']['compliance']['enabled']
+      products
+    end
+
+    def vmware_builders
+      vmware_products.map { |p| p['name'] }
+    end
+
+    def enabled_vmware_image_names
+      enabled_vmware_products.map { |p| p['builder_options']['image_name'] }
     end
 
     def enabled_gce_image_names

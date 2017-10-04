@@ -40,6 +40,7 @@ suites:
             enabled: true
           compliance:
             enabled: true
+
   - name: gce_compliance
     run_list: "marketplace_image::default"
     attributes:
@@ -59,6 +60,36 @@ suites:
     attributes:
       marketplace_image:
         gce:
+          automate:
+            enabled: true
+          compliance:
+            enabled: true
+
+  - name: vmware_compliance
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        vmware:
+          compliance:
+            enabled: true
+  - name: vmware_automate
+    run_list: "marketplace_image::default"
+    attributes:
+      vmware:
+        packer_ssh_password: <%= ENV['PACKER_SSH_PASSWORD'] %>
+        esx_host: <%= ENV['ESX_HOST'] %>
+        esx_password: <%= ENV['ESX_PASSWORD'] %>
+      packman:
+        version: '1.1.0'
+      marketplace_image:
+        vmware:
+          automate:
+            enabled: true
+  - name: vmware_all
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        vmware:
           automate:
             enabled: true
           compliance:
@@ -131,6 +162,7 @@ suites:
               enabled: true
             compliance:
               enabled: true
+
   - name: all
     run_list: "marketplace_image::default"
     attributes:
@@ -152,6 +184,11 @@ suites:
           compliance:
             enabled: true
         gce:
+          automate:
+            enabled: true
+          compliance:
+            enabled: true
+        vmware:
           automate:
             enabled: true
           compliance:
