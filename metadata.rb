@@ -9,4 +9,4 @@ version '0.5.0'
 
 chef_version '>=12.19'
 
-depends 'packman'
+depends 'packman' '>=0.2.0'

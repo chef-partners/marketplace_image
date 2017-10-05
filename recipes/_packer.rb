@@ -12,16 +12,6 @@ end
 
 creds = data_bag_item('marketplace_image', 'publishing_credentials')
 
-if creds['azure']
-  directory node['marketplace_image']['azure']['cred_dir']
-
-  template node['marketplace_image']['azure']['publish_settings_path'] do
-    sensitive true
-    source 'azure_publish_settings.xml.erb'
-    variables creds['azure']['publish_settings']
-  end
-end
-
 if creds['aws']
   directory node['marketplace_image']['aws']['cred_dir']
 

@@ -102,14 +102,10 @@ hash for each cloud. If you wish to run these builders you'll need to create a
 {
   "id": "publishing_credentials",
   "azure": {
-    "publish_settings": {
-      "schema_version": "2.0",
-      "publish_method": "AzureServiceManagementAPI",
-      "service_management_url": "https://management.core.windows.net",
-      "subscription_id": "1XXXXXX-XXXX-XXXX-XXXXXXXXXX",
-      "subscription_name": "Partner Engineering",
-      "management_certificate": "MIIKDAIXXXXXXX....."
-    }
+      "subscription_id": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+      "subscription_name": "XXXXXXXXXXXXXXXXXXXX",
+      "client_id": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+      "client_secret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
   },
   "gce": {
     "account": {
