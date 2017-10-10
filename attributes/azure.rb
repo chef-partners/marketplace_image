@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 default['marketplace_image']['azure']['automate']['enabled'] = false
-default['marketplace_image']['azure']['compliance']['enabled'] = false
 
 default_marketplace_config = {
   'role' => 'automate',
@@ -41,19 +40,3 @@ default['marketplace_image']['azure']['automate'] = {
   'builder_options' => azure_builder_config,
   'marketplace_config_options' => default_marketplace_config,
 }
-
-default['marketplace_image']['azure']['compliance']['products'] =
-  [5, 25, 50, 100, 150, 200, 250].map do |node_count|
-    {
-      'name' => "azure_compliance_#{node_count}",
-      'builder_options' => azure_builder_config.merge(
-        'name' => "azure_compliance_#{node_count}",
-        'user_image_label' => "Chef_Compliance_#{node_count}_{{timestamp}}"
-      ),
-      'marketplace_config_options' => default_marketplace_config.merge(
-        'license_count' => node_count,
-        'license_type' => 'fixed',
-        'role' => 'compliance'
-      ),
-    }
-  end

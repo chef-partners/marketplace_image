@@ -70,20 +70,8 @@ packer_provisioner 'prepare_automate_for_publishing' do
   only automate_builders
 end
 
-packer_provisioner 'prepare_compliance_for_publishing' do
-  type 'shell'
-  source 'prepare_compliance_for_publishing.sh.erb'
-  only compliance_builders
-end
-
 # TODO: Can probably remove these but they're not hurting anything
 packer_provisioner 'sudo rm -f /etc/chef-manage/manage.rb' do
-  type 'shell'
-  inline true
-  inline_shebang '/bin/bash'
-end
-
-packer_provisioner 'sudo rm -f /etc/chef-compliance/chef-compliance.rb' do
   type 'shell'
   inline true
   inline_shebang '/bin/bash'

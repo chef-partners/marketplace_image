@@ -17,35 +17,12 @@ platforms:
         memory: 4096
 
 suites:
-  - name: azure_compliance
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        azure:
-          compliance:
-            enabled: true
   - name: azure_automate
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         azure:
           automate:
-            enabled: true
-  - name: azure_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        azure:
-          automate:
-            enabled: true
-          compliance:
-            enabled: true
-  - name: gce_compliance
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        gce:
-          compliance:
             enabled: true
   - name: gce_automate
     run_list: "marketplace_image::default"
@@ -54,16 +31,6 @@ suites:
         gce:
           automate:
             enabled: true
-  - name: gce_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        gce:
-          automate:
-            enabled: true
-          compliance:
-            enabled: true
-
   - name: aws_public_automate
     run_list: "marketplace_image::default"
     attributes:
@@ -72,32 +39,6 @@ suites:
           public:
             automate:
               enabled: true
-  - name: aws_public_compliance
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            compliance:
-              enabled: true
-  - name: aws_public_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            automate:
-              enabled: true
-            compliance:
-              enabled: true
-  - name: aws_ic_compliance
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          ic:
-            compliance:
-              enabled: true
   - name: aws_ic_automate
     run_list: "marketplace_image::default"
     attributes:
@@ -105,31 +46,6 @@ suites:
         aws:
           ic:
             automate:
-              enabled: true
-  - name: aws_ic_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          ic:
-            automate:
-              enabled: true
-            compliance:
-              enabled: true
-  - name: aws_all
-    run_list: "marketplace_image::default"
-    attributes:
-      marketplace_image:
-        aws:
-          public:
-            automate:
-              enabled: true
-            compliance:
-              enabled: true
-          ic:
-            automate:
-              enabled: true
-            compliance:
               enabled: true
   - name: all
     run_list: "marketplace_image::default"
@@ -144,15 +60,9 @@ suites:
           ic:
             automate:
               enabled: true
-            compliance:
-              enabled: true
         azure:
           automate:
             enabled: true
-          compliance:
-            enabled: true
         gce:
           automate:
-            enabled: true
-          compliance:
             enabled: true

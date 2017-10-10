@@ -34,7 +34,7 @@ The `marketplace_image` cookbook has support for the following cloud marketplace
 
 Currently there is no scheduled release process for new marketplace images.
 New images are usually released for public marketplaces when one or more Chef
-Server, Chef Compliance, or add-on packages are released. Assuming that no
+Server or add-on packages are released. Assuming that no
 bugs are found during manual acceptance testing, the release process can
 usually be done by one person in a day.
 
@@ -168,8 +168,6 @@ documentation to make sure that the user can login and start using the software.
 If testing the Chef Sever AIO products you'll want to run `chef-server-ctl test`
 to verify that all the Chef Server endpoints are functioning and verify that
 the events made it into Analytics.
-
-For Chef Compliance you might want to try scanning an additional AWS node.
 
 ## Release Marketplace Images
 
