@@ -51,7 +51,6 @@ default['marketplace_image']['aws']['public']['automate'] =
   {
     'name' => 'aws_public_automate',
     'builder_options' => aws_builder_config.merge(
-      'ami_product_codes' => ['ed3lb0p2oc2ot3v9v72ku1pdt'],
       'ami_name' => normalize_name('public_automate')
     ),
     'marketplace_config_options' => default_marketplace_config.merge(
