@@ -33,6 +33,12 @@ packer_provisioner 'setup_apt_stable' do
   not_if { use_current_repo? }
 end
 
+packer_provisioner 'apt_dist_upgrade' do
+  type 'shell'
+  source 'apt_dist_upgrade.sh.erb'
+  only alibaba_builders
+end
+
 packer_provisioner 'install_marketplace_apt' do
   type 'shell'
   source 'install_marketplace_apt.sh.erb'
