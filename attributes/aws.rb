@@ -18,11 +18,13 @@ default['marketplace_image']['aws']['credential_file'] = credential_file
 default['marketplace_image']['aws']['automate']['source_ami'] = 'ami-65ca3873'
 
 default['marketplace_image']['aws']['public']['automate']['enabled'] = false
+default['marketplace_image']['aws']['public_byol']['automate']['enabled'] = false
 
 # NOTE: Currently we don't have product codes for Automate in the IC Marketplace.
 # Until we get codes and add them into the Automate billing module we'll just
 # have legacy AIO products, of which we are no longer creating.
 default['marketplace_image']['aws']['ic']['automate']['enabled'] = false
+default['marketplace_image']['aws']['ic_byol']['automate']['enabled'] = false
 
 default_marketplace_config = {
   'role' => 'automate',
@@ -57,5 +59,18 @@ default['marketplace_image']['aws']['public']['automate'] =
       'license_type' => 'flexible',
       'free_node_count' => 10,
       'product_code' => 'ed3lb0p2oc2ot3v9v72ku1pdt'
+    ),
+  }
+
+default['marketplace_image']['aws']['public_byol']['automate'] =
+  {
+    'name' => 'aws_public_byol_automate',
+    'builder_options' => aws_builder_config.merge(
+      'ami_name' => normalize_name('public_byol_automate')
+    ),
+   'marketplace_config_options' => default_marketplace_config.merge(
+     'license_type' => 'BYOL',
+     'free_node_count' => 10,
+     'product_code' => '363g20l00p8t6jcrb3z79yl3f'
     ),
   }

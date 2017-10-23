@@ -39,12 +39,28 @@ suites:
           public:
             automate:
               enabled: true
-  - name: aws_ic_automate
+  - name: aws_public_byol_automate
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          public_byol:
+            automate:
+              enabled: true
+  - name: aws_ic_automate # doesn't do anything; see attributes/aws.rb
     run_list: "marketplace_image::default"
     attributes:
       marketplace_image:
         aws:
           ic:
+            automate:
+              enabled: true
+  - name: aws_ic_byol_automate # doesn't do anything; see attributes/aws.rb
+    run_list: "marketplace_image::default"
+    attributes:
+      marketplace_image:
+        aws:
+          ic_byol:
             automate:
               enabled: true
   - name: all
@@ -55,9 +71,13 @@ suites:
           public:
             automate:
               enabled: true
-            compliance:
+          public_byol:
+            automate:
               enabled: true
-          ic:
+          ic:      # doesn't do antyhing; see attributes/aws.rb
+            automate:
+              enabled: true
+          ic_byol: # doesn't do anything; see attributes/aws.rb
             automate:
               enabled: true
         azure:
