@@ -40,7 +40,8 @@ module MarketplaceImageCookbook
 
     def aws_products
         [
-          node['marketplace_image']['aws']['public']['automate']
+          node['marketplace_image']['aws']['public']['automate'],
+	  node['marketplace_image']['aws']['public_byol']['automate']
         ]
     end
 
@@ -56,6 +57,8 @@ module MarketplaceImageCookbook
       products = []
       products << node['marketplace_image']['aws']['public']['automate'] if
         node['marketplace_image']['aws']['public']['automate']['enabled']
+      products << node['marketplace_image']['aws']['public_byol']['automate'] if
+        node['marketplace_image']['aws']['public_byol']['automate']['enabled']
       products
     end
 
@@ -111,12 +114,14 @@ module MarketplaceImageCookbook
       enabled_gce_products.map { |p| p['name'] }
     end
 
+    # TODO: I'm not seeing this used anywhere. Remove?
     def automate_products
       [node['marketplace_image']['aws']['public']['automate']]
     end
 
     def automate_builders
       [node['marketplace_image']['aws']['public']['automate']['name'],
+       node['marketplace_image']['aws']['public_byol']['automate']['name'],
        node['marketplace_image']['azure']['automate']['name'],
       ]
     end
