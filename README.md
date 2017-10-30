@@ -242,7 +242,7 @@ Marketplace security scanner.
 After you've built Azure images you'll need to create a shared access signature,
 share the image blobs with Azure and update the products with a new revision.
 
-1. Create the shared access signature with either the [Azure GUI](#azure-gui) or the [Azure command line](#azure-command-line).
+1. Create the shared access signature with the [Azure command line](#azure-command-line).
 
 1. Log in to the [Azure Portal](https://portal.azure.com/) and navigate to the
   marketplaceimages storage account image blobs. I know, easier said than done.
@@ -274,16 +274,8 @@ share the image blobs with Azure and update the products with a new revision.
 
 1. Make sure you update the submittal history document during each stage.
 
-#### Azure GUI
-1. Login to the Partner Engineering Azure portal.
-
-1. Go to More Services -> Storage Accounts -> marketplaceimages -> Shared access signature.
-
-1. Create a shared access signature that is valid from yesterday to a week from today with Allowed Services = Blob; Allowed Resource Types = container, object, and Allowed Permissions = read, list.
-
 #### Azure command line
-(Reference: https://buildazure.com/2017/05/23/azure-cli-2-0-generate-sas-token-for-blob-in-azure-storage/)
-(currently untested due to weird; once we test it, it will be the default)
+Note: the publishing portal wants a service-level shared access signature; generating the signature in the azure portal will generated an account-level SAS.
 
 1. Download and configure the [azure cli 2.0 tools](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
 
@@ -298,7 +290,7 @@ az storage account keys list --resource-group publish-marketplace-images --accou
   today.
 
   ```shell
-az storage blob generate-sas --account-name marketplaceimages --account-key <primary storage account key> --container-name vhds --permissions rl --start `date -u -v -1d "+%FT%TZ"` --expiry `date -u -v +8d "+%FT%TZ"`
+az storage container generate-sas --account-name marketplaceimages --account-key '<primary storage account key>' --permissions rl --start `date -u -v -1d "+%FT%TZ"` --expiry `date -u -v +8d "+%FT%TZ"` --name system
   ```
 ### Test Staged Images
 The basic strategy will be
