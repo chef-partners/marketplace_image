@@ -77,6 +77,14 @@ packer_provisioner 'sudo rm -f /etc/chef-manage/manage.rb' do
   inline_shebang '/bin/bash'
 end
 
+packer_provisioner '/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync' do
+  execute_command "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
+  type 'shell'
+  inline true
+  inline_shebang '/bin/sh -x'
+  only azure_builders
+end
+
 packer_template 'marketplace_images' do
   only enabled_builders
 end
