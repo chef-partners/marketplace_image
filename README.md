@@ -145,6 +145,13 @@ The current data bag item is in the lastpass shared folder `marketplace-images`.
 
 Test Kitchen has several suites for publishing different combinations of images.
 
+You can specify the channel to use for installing `chef-marketplace`, `chef-server`
+and `automate` packages by setting the environment variable `CHANNEL`. Valid channel
+names are; `unstable`, `current`, and `stable` (default without variable defined).
+
+When releasing instaling a new marketplace build from apt or yum it is important to
+check the resulting installed version is the version expected.
+
 If you're targeting a specific release for a cloud and/or product set you'll
 probably want to use a targeted combination.
 
@@ -218,7 +225,8 @@ Marketplace security scanner.
 
 1. Update the AMI ID's in the product load form(s) for the marketplace you're
   updating. You can find the load forms in the Engineering > Marketplace
-  folder on drive.
+  folder on drive. You should be able to find one with prepopulated data that
+  just needs to be updated.
 
 1. Upload the new load forms in the [AWS Marketplace portal](https://aws.amazon.com/marketplace/management/product-load/).
 
@@ -238,9 +246,10 @@ Marketplace security scanner.
 1. Make sure you update the submittal history document during each stage.
 
 ### Azure Staging
-
 After you've built Azure images you'll need to create a shared access signature,
-share the image blobs with Azure and update the products with a new revision.
+share the image blobs with Azure and update the products with a new revision. In
+Azure we have seperate marketplace offers. One is the VM image itself, and the
+other is the ARM Solution Template which is used to configure the instance.
 
 1. Create the shared access signature with the [Azure command line](#azure-command-line).
 
@@ -257,7 +266,7 @@ share the image blobs with Azure and update the products with a new revision.
 1. Login to the [Azure Publishing Portal](https://publish.windowsazure.com) using
   the 'azurestore' credentials in lastpass. Go to Virtual Machines and say yes, you do want to use the new UI.
 
-1. Select your image, e.g. "Chef Automate VM Image" -> SKUs -> select your SKU. (Currently "byol" for the Chef Automate VM Image.)
+1. Select the offer, e.g. [Chef Automate VM Image](https://cloudpartner.azure.com/#publisher/chef-software/offertype/microsoft-azure-virtualmachines/offer/chef-automate-vm-image) -> SKUs -> select your SKU. (Currently [byol](https://cloudpartner.azure.com/#publisher/chef-software/offertype/microsoft-azure-virtualmachines/offer/chef-automate-vm-image/form/sku/plan/byol) for the Chef Automate VM Image.)
 
 1. Scroll to the bottom of the page and click on "+ New VM Image".
 
@@ -289,8 +298,14 @@ az storage account keys list --resource-group publish-marketplace-images --accou
 1. Create a shared access signature that is valid from yesterday to a week from
   today.
 
+MacOS:
   ```shell
 az storage container generate-sas --account-name marketplaceimages --account-key '<primary storage account key>' --permissions rl --start `date -u -v -1d "+%FT%TZ"` --expiry `date -u -v +8d "+%FT%TZ"` --name system
+  ```
+GNU/Linux:
+
+  ```shell
+az storage container generate-sas --account-name marketplaceimages --account-key '<primary storage account key>' --permissions rl --start `date -u --date="-1 day" "+%FT%TZ"` --expiry `date -u --date="+8 days" "+%FT%TZ"` --name system
   ```
 ### Test Staged Images
 The basic strategy will be
@@ -314,6 +329,26 @@ Currently, when AWS stages an image, they email us the AMI ID. When you start an
 #### Boot Staged Azure Images
 Once Azure has staged an image, they will announce it to us in email. By convention, the name of the staged image is the original image name with "preview" appended to it, e.g. "chef-automate-vm-image-preview". The [omnibus-marketplace repo](https://github.com/chef-partners/omnibus-marketplace) contains a solution template you can use to boot an instance from the preview image:
 
+#### Using Staged ARM Templates
+There is a slightly different process for testing when staging a new ARM template. Assuming you are
+publishing both a new VM image and a new ARM template you will need to wait for both offers to become
+available for preview.
+
+1. Login to the [Azure Cloud Partner Portal](https://cloudpartner.azure.com)
+
+1. Select the [Chef Automate](https://cloudpartner.azure.com/#publisher/chef-software/offertype/microsoft-azure-applications/offer/chef-automate/form/offerSettings) offer from the "All offer" section.
+
+1. Click on the "Status" tab.
+
+1. Copy the link for [Microsoft Azure - allinone (Preview)](https://portal.azure.com/#create/chef-software.chef-automate-previewallinone)
+
+1. Login to the [Azure Portal](https://portal.azure.com).
+
+1. Paste the link to create a new Azure instance and fill out the form to create an instance.
+
+
+#### Using Existing ARM Templates
+This process does not test *staged/preview* ARM templates.
 1. Make sure the `automatearmtest` resource group exists in the Chef Partner Engineering Azure portal.
 
 1. Create a branch of [omnibus-marketplace](https://github.com/chef-partners/omnibus-marketplace) where the `imageProduct` parameter in `arm-templates/automate/mainTemplateParameters.json` is set to the name of the preview image.
@@ -321,6 +356,8 @@ Once Azure has staged an image, they will announce it to us in email. By convent
 1. Push the branch to github.
 
 1. In `arm-templates/automate/mainTemplateParameters.json`, set the value of `baseUrl` to the branch name in github. Push the change.
+
+1. Create the azure resource group `automatearmtest` if it does not already exist with: `az group create --name automatearmtest -l "East US"`
 
 1. Run `make arm-test` in the `omnibus-marketplace` root directory to boot an instance using our current solutions template from github with the staged image.
 
