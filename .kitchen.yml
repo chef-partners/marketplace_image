@@ -1,21 +1,21 @@
 ---
+driver:
+  name: vagrant
+  box: bento/ubuntu-14.04
+  customize:
+    cpus: 2
+    memory: 4096
+
 provisioner:
   name: chef_zero
-  require_chef_omnibus: true
-  chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
+  product_name: chefdk
+  channel: current
   attributes:
     marketplace_image:
       package_install_channel: <%= ENV['CHANNEL'] || 'stable' %>
 
 platforms:
   - name: publish
-    driver_plugin: vagrant
-    driver_config:
-      box: bento/ubuntu-14.04
-      customize:
-        cpus: 2
-        memory: 4096
-
 suites:
   - name: azure_automate
     run_list: "marketplace_image::default"
