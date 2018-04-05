@@ -4,4 +4,8 @@ set -ex
 
 sudo yum update -y
 sudo yum upgrade -y
+<% if @version %>
+sudo yum install chef-marketplace-<%= @version %> -y
+<% else %>
 sudo yum install chef-marketplace -y
+<% end %>

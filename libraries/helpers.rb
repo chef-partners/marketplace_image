@@ -126,8 +126,8 @@ module MarketplaceImageCookbook
       ]
     end
 
-    def use_current_repo?
-      node['marketplace_image']['package_install_channel'].casecmp('current') == 0
+    def use_repo?(repo)
+      node['marketplace_image']['package_install_channel'].casecmp(repo) == 0
     end
   end
 end

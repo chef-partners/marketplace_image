@@ -3,4 +3,8 @@
 set -ex
 
 sudo apt-get update
+<% if @version %>
+sudo apt-get install chef-marketplace=<%= @version %>
+<% else %>
 sudo apt-get install chef-marketplace -y
+<% end %>

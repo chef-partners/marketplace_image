@@ -19,24 +19,20 @@ packer_provisioner 'setup_marketplace' do
   source 'setup_marketplace.sh.erb'
 end
 
-packer_provisioner 'setup_apt_current' do
-  type 'shell'
-  source 'setup_apt_current.sh.erb'
-  only azure_builders
-  only_if { use_current_repo? }
-end
+%w(unstable current stable).each do |repo|
+  packer_provisioner "setup_apt_#{repo}" do
+    type 'shell'
+    source "setup_apt_#{repo}.sh.erb"
+    only azure_builders
+    only_if { use_repo? repo }
+  end
 
-packer_provisioner 'setup_apt_stable' do
-  type 'shell'
-  source 'setup_apt_stable.sh.erb'
-  only azure_builders
-  not_if { use_current_repo? }
-end
-
-packer_provisioner 'install_marketplace_apt' do
-  type 'shell'
-  source 'install_marketplace_apt.sh.erb'
-  only azure_builders
+  packer_provisioner "setup_yum_#{repo}" do
+    type 'shell'
+    source "setup_yum_#{repo}.sh.erb"
+    except azure_builders
+    only_if { use_repo? repo }
+  end
 end
 
 packer_provisioner 'enable_ipv6_loopback' do
@@ -44,24 +40,22 @@ packer_provisioner 'enable_ipv6_loopback' do
   source 'enable_ipv6_loopback.sh.erb'
 end
 
-packer_provisioner 'setup_yum_current' do
+packer_provisioner 'install_marketplace_apt' do
   type 'shell'
-  source 'setup_yum_current.sh.erb'
-  except azure_builders
-  only_if { use_current_repo? }
-end
-
-packer_provisioner 'setup_yum_stable' do
-  type 'shell'
-  source 'setup_yum_stable.sh.erb'
-  except azure_builders
-  not_if { use_current_repo? }
+  source 'install_marketplace_apt.sh.erb'
+  only azure_builders
+  variables(
+    version: node['marketplace_image']['package_install_version']
+  )
 end
 
 packer_provisioner 'install_marketplace_yum' do
   type 'shell'
   source 'install_marketplace_yum.sh.erb'
   except azure_builders
+  variables(
+    version: node['marketplace_image']['package_install_version']
+  )
 end
 
 packer_provisioner 'prepare_automate_for_publishing' do

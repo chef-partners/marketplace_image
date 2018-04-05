@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -ex
+
+sudo rm -rf /etc/yum.repos.d/*chef*
+sudo rpm --import https://packages.chef.io/chef.asc
+sudo tee /etc/yum.repos.d/chef-unstable.repo <<EOL
+[chef-unstable]
+name=chef-unstable
+baseurl=https://packages.chef.io/repos/yum/unstable/el/7/\$basearch/
+gpgcheck=1
+enabled=1
+EOL
+sudo yum makecache fast
