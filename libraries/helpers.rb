@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 #
 # Author:: Partner Engineering <partnereng@chef.io>
-# Copyright (c) 2016, Chef Software, Inc. <legal@chef.io>
+# Copyright:: (c) 2016, Chef Software, Inc. <legal@chef.io>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ module MarketplaceImageCookbook
     end
 
     def aws_products
-        [
-          node['marketplace_image']['aws']['public']['automate'],
-	  node['marketplace_image']['aws']['public_byol']['automate']
-        ]
+      [
+        node['marketplace_image']['aws']['public']['automate'],
+    node['marketplace_image']['aws']['public_byol']['automate'],
+      ]
     end
 
     def enabled_aws_builders
@@ -68,7 +68,7 @@ module MarketplaceImageCookbook
 
     def azure_products
       [
-        node['marketplace_image']['azure']['automate']
+        node['marketplace_image']['azure']['automate'],
       ]
     end
 
@@ -132,7 +132,7 @@ module MarketplaceImageCookbook
   end
 end
 
-Chef::Recipe.send(:include, MarketplaceImageCookbook::Helpers)
-Chef::Provider.send(:include, MarketplaceImageCookbook::Helpers)
+Chef::DSL::Recipe.send(:include, MarketplaceImageCookbook::Helpers)
+Chef::DSL::Recipe.send(:include, MarketplaceImageCookbook::Helpers)
 Chef::Resource.send(:include, MarketplaceImageCookbook::Helpers)
 Chef::ResourceDefinition.send(:include, MarketplaceImageCookbook::Helpers)

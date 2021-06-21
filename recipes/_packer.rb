@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 apt_update 'update' do
   action :update
-  only_if { node['platform_family'] == 'debian' }
+  only_if { platform_family?('debian') }
 end
 
 include_recipe 'packman::default'
 
 bash 'ulimit -n unlimited' do
-  not_if { node['platform_family'] == 'debian' }
+  not_if { platform_family?('debian') }
 end
 
 creds = data_bag_item('marketplace_image', 'publishing_credentials')

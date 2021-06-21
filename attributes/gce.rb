@@ -25,7 +25,7 @@ gce_builder_config = {
   'project_id' => 'chef-marketplace-dev',
   'source_image' => 'centos-7-v20160126',
   'zone' => 'us-central1-a',
-  'ssh_username' => 'marketplace' # required on CentOS
+  'ssh_username' => 'marketplace', # required on CentOS
 }
 
 default['marketplace_image']['gce']['aio']['products'] =

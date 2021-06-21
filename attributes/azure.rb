@@ -15,7 +15,7 @@ default_marketplace_config = {
   'free_node_count' => 5,
 }
 
-creds = Chef::DataBagItem.load('marketplace_image', 'publishing_credentials')
+creds = data_bag_item('marketplace_image', 'publishing_credentials')
 
 azure_builder_config = {
   'name' => 'azure_automate_BYOL',
