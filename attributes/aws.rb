@@ -3,7 +3,7 @@ cred_dir = ::File.expand_path(::File.join('~', '.aws'))
 credential_file = ::File.join(cred_dir, 'credentials')
 
 TIMESTAMP = Time.now.strftime('%Y_%m_%d_%H_%M_%S').freeze
-INVALID_AMI_NAME_CHARACTERS = /[^\w\(\)\.\-\/]/
+INVALID_AMI_NAME_CHARACTERS = %r{[^\w\(\)\.\-/]}
 
 def normalize_name(name)
   # Append timestamp
@@ -72,5 +72,5 @@ default['marketplace_image']['aws']['public_byol']['automate'] =
      'license_type' => 'BYOL',
      'free_node_count' => 10,
      'product_code' => '363g20l00p8t6jcrb3z79yl3f'
-    ),
+   ),
   }
